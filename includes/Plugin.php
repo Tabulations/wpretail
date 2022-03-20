@@ -1,6 +1,6 @@
 <?php
 
-namespace WPForms\Starter;
+namespace WPRetail;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -25,7 +25,7 @@ class Plugin {
 	 * @since 1.0.0
 	 */
 	private function __clone() {
-		_doing_it_wrong( __FUNCTION__, esc_html__( 'Cloning is forbidden.', 'wpforms-starter' ), '1.0.0' );
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Cloning is forbidden.', 'wpretail' ), '1.0.0' );
 	}
 
 	/**
@@ -34,7 +34,7 @@ class Plugin {
 	 * @since 1.0.0
 	 */
 	final public function __wakeup() {
-		_doing_it_wrong( __FUNCTION__, esc_html__( 'Unserializing instances of this class is forbidden.', 'wpforms-starter' ), '1.0.0' );
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Unserializing instances of this class is forbidden.', 'wpretail' ), '1.0.0' );
 	}
 
 	/**
@@ -86,16 +86,16 @@ class Plugin {
 	 * Note: the first-loaded translation file overrides any following ones if the same translation is present.
 	 *
 	 * Locales found in:
-	 *      - WP_LANG_DIR/wpforms-starter/wpforms-starter-LOCALE.mo
-	 *      - WP_LANG_DIR/plugins/wpforms-starter-LOCALE.mo
+	 *      - WP_LANG_DIR/wpretail/wpretail-LOCALE.mo
+	 *      - WP_LANG_DIR/plugins/wpretail-LOCALE.mo
 	 *
 	 * @since 1.0.0
 	 */
 	public function load_plugin_textdomain() {
-		$locale = apply_filters( 'plugin_locale', get_locale(), 'wpforms-starter' );
+		$locale = apply_filters( 'plugin_locale', get_locale(), 'wpretail' );
 
-		load_textdomain( 'wpforms-starter', WP_LANG_DIR . '/wpforms-starter/wpforms-starter-' . $locale . '.mo' );
-		load_plugin_textdomain( 'wpforms-starter', false, plugin_basename( dirname( WPFORMS_STARTER_PLUGIN_FILE ) ) . '/languages' );
+		load_textdomain( 'wpretail', WP_LANG_DIR . '/wpretail/wpretail-' . $locale . '.mo' );
+		load_plugin_textdomain( 'wpretail', false, plugin_basename( dirname( WPRetail_PLUGIN_FILE ) ) . '/languages' );
 	}
 
 	/**
@@ -106,9 +106,9 @@ class Plugin {
 	 * @return array Array of modified plugin row meta.
 	 */
 	public function plugin_row_meta( $plugin_meta, $plugin_file ) {
-		if ( plugin_basename( WPFORMS_STARTER_PLUGIN_FILE ) === $plugin_file ) {
+		if ( plugin_basename( WPRetail_PLUGIN_FILE ) === $plugin_file ) {
 			$new_plugin_meta = [
-				'docs' => '<a href="' . esc_url( 'https://docs.wpcanny.com/document/wpforms-starter/' ) . '" aria-label="' . esc_attr__( 'View WPForms Starter documentation', 'wpforms-starter' ) . '">' . esc_html__( 'Docs', 'wpforms-starter' ) . '</a>',
+				'docs' => '<a href="' . esc_url( 'https://docs.wpcanny.com/document/wpretail/' ) . '" aria-label="' . esc_attr__( 'View WPRetail documentation', 'wpretail' ) . '">' . esc_html__( 'Docs', 'wpretail' ) . '</a>',
 			];
 
 			return array_merge( $plugin_meta, $new_plugin_meta );
@@ -126,12 +126,12 @@ class Plugin {
 	 */
 	private function check_build_dependencies() {
 		// Check if we have compiled CSS.
-		if ( ! file_exists( plugin_dir_path( WPFORMS_STARTER_PLUGIN_FILE ) . 'css/admin-starter.css' ) ) {
+		if ( ! file_exists( plugin_dir_path( WPRetail_PLUGIN_FILE ) . 'css/admin-starter.css' ) ) {
 			return false;
 		}
 
 		// Check if we have minified JS.
-		if ( ! file_exists( plugin_dir_path( WPFORMS_STARTER_PLUGIN_FILE ) . 'js/admin-starter.min.js' ) ) {
+		if ( ! file_exists( plugin_dir_path( WPRetail_PLUGIN_FILE ) . 'js/admin-starter.min.js' ) ) {
 			return false;
 		}
 
@@ -152,9 +152,9 @@ class Plugin {
 			'<div class="notice notice-error"><p>%s</p></div>',
 			sprintf(
 				/* translators: 1: grunt command. 2: URL of the GitHub Repository releases page */
-				esc_html__( 'You have installed a development version of WPForms Starter which requires files to be built and minified. From the plugin directory, run %1$s to build and minify assets. Or you can download a pre-built version of the plugin from the %2$s.', 'wpforms-starter' ),
+				esc_html__( 'You have installed a development version of WPRetail which requires files to be built and minified. From the plugin directory, run %1$s to build and minify assets. Or you can download a pre-built version of the plugin from the %2$s.', 'wpretail' ),
 				'<code>grunt assets</code>',
-				'<a href="https://github.com/WPCanny/wpforms-starter/releases">GitHub Repository releases page</a>'
+				'<a href="https://github.com/WPCanny/wpretail/releases">GitHub Repository releases page</a>'
 			)
 		);
 	}
@@ -165,7 +165,7 @@ class Plugin {
 	 * @since 1.0.0
 	 */
 	public function wpforms_addon_deactivate() {
-		deactivate_plugins( plugin_basename( WPFORMS_STARTER_PLUGIN_FILE ) );
+		deactivate_plugins( plugin_basename( WPRetail_PLUGIN_FILE ) );
 	}
 
 	/**
@@ -182,8 +182,8 @@ class Plugin {
 			'<div class="notice notice-error is-dismissible"><p>%s</p></div>',
 			sprintf(
 				/* translators: %s: WPForms version */
-				esc_html__( 'The WPForms Starter plugin has been deactivated, because it requires %s or later to work!', 'wpforms-starter' ),
-				'<a href="https://wpforms.com" target="_blank">' . esc_html__( 'WPForms 1.6.5', 'wpforms-starter' ) . '</a>'
+				esc_html__( 'The WPRetail plugin has been deactivated, because it requires %s or later to work!', 'wpretail' ),
+				'<a href="https://wpforms.com" target="_blank">' . esc_html__( 'WPForms 1.6.5', 'wpretail' ) . '</a>'
 			)
 		);
 	}

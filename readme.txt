@@ -1,4 +1,4 @@
-=== WPForms Starter ===
+=== WPRetail ===
 Contributors: WPCanny
 Tags: wpforms, add-on, starter
 Requires at least: 5.4

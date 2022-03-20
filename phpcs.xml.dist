@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<ruleset name="WordPress Coding Standards for WPForms Starter Plugin">
-	<description>Sniffs for WordPress plugins, with minor modifications for WPForms Starter</description>
+<ruleset name="WordPress Coding Standards for WPRetail Plugin">
+	<description>Sniffs for WordPress plugins, with minor modifications for WPRetail</description>
 
 	<!-- Only scan PHP files. -->
 	<arg name="extensions" value="php" />
@@ -22,7 +22,7 @@
 
 	<!-- Configs -->
 	<config name="testVersion" value="5.6-" />
-	<config name="text_domain" value="wpforms-starter" />
+	<config name="text_domain" value="wpretail" />
 	<config name="minimum_supported_wp_version" value="5.4" />
 
 	<!-- PHPCompatibility -->

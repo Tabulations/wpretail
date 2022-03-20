@@ -1,5 +1,5 @@
 {
-	"name": "wpforms-starter",
+	"name": "wpretail",
 	"version": "1.0.0",
 	"private": true,
 	"description": "Just another WPForms plugin/add-on starter.",
@@ -7,12 +7,12 @@
 	"license": "GPL-2.0-or-later",
 	"keywords": [
 		"WordPress",
-		"wpforms-starter"
+		"wpretail"
 	],
-	"homepage": "https://github.com/WPCanny/wpforms-starter#readme",
-	"repository": "git+https://github.com/WPCanny/wpforms-starter.git",
+	"homepage": "https://github.com/WPCanny/wpretail#readme",
+	"repository": "git+https://github.com/WPCanny/wpretail.git",
 	"bugs": {
-		"url": "https://github.com/WPCanny/wpforms-starter/issues"
+		"url": "https://github.com/WPCanny/wpretail/issues"
 	},
 	"engines": {
 		"node": ">=10.0.0",

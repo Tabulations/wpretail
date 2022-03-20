@@ -1,30 +1,30 @@
 <?php
 /**
- * Plugin Name: WPForms Starter
- * Plugin URI: https://github.com/WPCanny/wpforms-starter
- * Description: Just another WPForms plugin/add-on starter.
+ * Plugin Name: WPRetail
+ * Plugin URI: https://wpretails.com
+ * Description: Advanced inventory management system for small retailers and startups to enterprize departmental stores. Products, Purchase, Sales and more.
  * Version: 1.0.0
- * Author: WPCanny
- * Author URI: https://wpcanny.com
- * Text Domain: wpforms-starter
+ * Author: WPRetail
+ * Author URI: https://wpretails.com
+ * Text Domain: wpretail
  * Domain Path: /languages/
  * Requires at least: 5.4
  * Requires PHP: 5.6.20
  *
- * @package WPForms\Starter
+ * @package WPRetail
  */
 
 // Exit if access directly.
 defined( 'ABSPATH' ) || exit;
 
-// WPForms Starter version.
-if ( ! defined( 'WPFORMS_STARTER_VERSION' ) ) {
-	define( 'WPFORMS_STARTER_VERSION', '1.0.0' );
+// WPRetail version.
+if ( ! defined( 'WPRETAIL_VERSION' ) ) {
+	define( 'WPRETAIL_VERSION', '1.0.0' );
 }
 
-// WPForms Starter root file.
-if ( ! defined( 'WPFORMS_STARTER_PLUGIN_FILE' ) ) {
-	define( 'WPFORMS_STARTER_PLUGIN_FILE', __FILE__ );
+// WPRetail root file.
+if ( ! defined( 'WPRETAIL_PLUGIN_FILE' ) ) {
+	define( 'WPRETAIL_PLUGIN_FILE', __FILE__ );
 }
 
 /**
@@ -41,7 +41,7 @@ if ( is_readable( $autoloader ) ) {
 		error_log( // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			sprintf(
 			/* translators: 1: composer command. 2: plugin directory */
-				esc_html__( 'Your installation of the WPForms Starter plugin is incomplete. Please run %1$s within the %2$s directory.', 'wpforms-starter' ),
+				esc_html__( 'Your installation of the WPRetail plugin is incomplete. Please run %1$s within the %2$s directory.', 'wpretail' ),
 				'`composer install`',
 				'`' . esc_html( str_replace( ABSPATH, '', __DIR__ ) ) . '`'
 			)
@@ -60,7 +60,7 @@ if ( is_readable( $autoloader ) ) {
 				'<div class="notice notice-error"><p>%s</p></div>',
 				sprintf(
 					/* translators: 1: composer command. 2: plugin directory */
-					esc_html__( 'Your installation of the WPForms Starter plugin is incomplete. Please run %1$s within the %2$s directory.', 'wpforms-starter' ),
+					esc_html__( 'Your installation of the WPRetail plugin is incomplete. Please run %1$s within the %2$s directory.', 'wpretail' ),
 					'<code>composer install</code>',
 					'<code>' . esc_html( str_replace( ABSPATH, '', __DIR__ ) ) . '</code>'
 				)
@@ -71,4 +71,4 @@ if ( is_readable( $autoloader ) ) {
 }
 
 // Initialize the plugin.
-add_action( 'plugins_loaded', [ 'WPForms\Starter\Plugin', 'instance' ] );
+add_action( 'plugins_loaded', [ 'WPRetail\Plugin', 'instance' ] );

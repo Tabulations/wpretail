@@ -1,5 +1,5 @@
 {
-	"name": "wpcanny/wpforms-starter",
+	"name": "wpcanny/wpretail",
 	"description": "Just another WPForms plugin/add-on starter.",
 	"homepage": "https://wpcanny.com",
 	"type": "wordpress-plugin",
@@ -22,7 +22,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"WPForms\\Starter\\": "src/"
+			"WPRetail\\": "includes/"
 		}
 	},
 	"scripts": {
@@ -36,15 +36,15 @@
 			"@makepot:audit --skip-audit"
 		],
 		"makepot:audit": [
-			"wp --allow-root i18n make-pot . --slug=wpforms-starter"
+			"wp --allow-root i18n make-pot . --slug=wpretail"
 		]
 	},
 	"extra": {
 		"scripts-description": {
 			"phpcs": "Analyze code against the WordPress coding standard with PHP_CodeSniffer",
 			"phpcbf": "Fix coding standards warnings/errors automattically with PHP Code Beautifier",
-			"makepot": "Generate langauges/wpforms-starter.pot file",
-			"makepot:audit": "Generate langauges/wpforms-starter.pot file and run audit"
+			"makepot": "Generate langauges/wpretail.pot file",
+			"makepot:audit": "Generate langauges/wpretail.pot file and run audit"
 		}
 	}
 }
