@@ -4,8 +4,8 @@ module.exports = function ( grunt ) {
 	grunt.initConfig( {
 		// Setting folder templates.
 		dirs: {
-			js: 'js',
-			css: 'css',
+			js: 'assets/js',
+			css: 'assets/css',
 		},
 
 		// JavaScript linting with ESLint.
