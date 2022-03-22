@@ -70,5 +70,21 @@ if ( is_readable( $autoloader ) ) {
 	return;
 }
 
-// Initialize the plugin.
-add_action( 'plugins_loaded', [ 'WPRetail\Plugin', 'instance' ] );
+// Include the main EverestForms class.
+if ( ! class_exists( 'WPRetail' ) ) {
+	include_once dirname( __FILE__ ) . '/includes/wpretail.php';
+}
+
+/**
+ * Main instance of EverestForms.
+ *
+ * Returns the main instance of EVF to prevent the need to use globals.
+ *
+ * @since  1.0.0
+ * @return WPRetail
+ */
+function wpretail() {
+	return WPRetail::instance();
+}
+
+wpretail();

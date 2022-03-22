@@ -12,10 +12,6 @@ namespace WPRetail\Admin;
 
 defined( 'ABSPATH' ) || exit;
 
-if ( class_exists( 'Admin_Menus', false ) ) {
-	return new Admin_Menus();
-}
-
 /**
  * WpRetail_Admin_Menus Class.
  */
@@ -48,16 +44,25 @@ class Admin_Menus {
 	 * Add menu items.
 	 */
 	public function admin_menu() {
-		add_menu_page( esc_html__( 'WP Retail', 'wpretail' ), esc_html__( 'WP Retail', 'wpretail' ), 'manage_options', 'wpretail', null, 'dashicons-businessman', '25' );
-		add_menu_page( esc_html__( 'Dashboard', 'wpretail' ), esc_html__( 'Dashboard', 'wpretail' ), 'manage_options', 'wpretail', [ $this, 'dashboard' ], 'dashicons-businessman', '25' );
+		add_menu_page( esc_html__( 'WP Retail', 'wpretail' ), esc_html__( 'WP Retail', 'wpretail' ), 'manage_options', 'wpretail', [ $this, 'dashboard' ], 'dashicons-businessman', '25' );
+	}
+
+	/**
+	 * Menus
+	 */
+	public function menus() {
+		return apply_filters( 'wpretail_menus', [] );
 	}
 
 	/**
 	 * Dashboard
+	 * s
 	 *
 	 * @return void
 	 */
 	public function dashboard() {
+		// Menus.
+		$menus = $this->menus(); // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 		include plugin_dir_path( WPRETAIL_PLUGIN_FILE ) . '/templates/layout.php';
 	}
 }

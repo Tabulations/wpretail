@@ -1,8 +1,5 @@
 <?php
 
-namespace WPRetail;
-use WPRetail\Admin\Admin_Menus;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -10,7 +7,63 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0
  */
-class Plugin {
+final class WPRetail {
+
+	/**
+	 * Plugin  DIR.
+	 *
+	 * @var $plugin_dir
+	 */
+	private $plugin_dir;
+
+	/**
+	 * Plugin  DIR.
+	 *
+	 * @var $base_name
+	 */
+	private $base_name;
+
+	/**
+	 * Plugin  DIR.
+	 *
+	 * @var $version
+	 */
+	private $version;
+
+	/**
+	 * Plugin  DIR.
+	 *
+	 * @var $log_dir
+	 */
+	private $log_dir;
+
+	/**
+	 * Plugin  DIR.
+	 *
+	 * @var $session_cache_group
+	 */
+	private $session_cache_group;
+
+	/**
+	 * Plugin  DIR.
+	 *
+	 * @var $products
+	 */
+	public $products;
+
+	/**
+	 * Sales Object.
+	 *
+	 * @var $sales
+	 */
+	public $sales;
+
+	/**
+	 * Function  Object.
+	 *
+	 * @var $helper
+	 */
+	public $helper;
 
 	/**
 	 * The single instance of the class.
@@ -34,46 +87,88 @@ class Plugin {
 	 *
 	 * @since 1.0.0
 	 */
-	final public function __wakeup() {
+	public function __wakeup() {
 		_doing_it_wrong( __FUNCTION__, esc_html__( 'Unserializing instances of this class is forbidden.', 'wpretail' ), '1.0.0' );
 	}
 
 	/**
-	 * Main plugin class instance.
+	 * Main WPRetail Instance.
 	 *
-	 * Ensures only one instance of the plugin is loaded or can be loaded.
+	 * Ensures only one instance of WPRetail is loaded or can be loaded.
 	 *
-	 * @since 1.0.0
-	 *
-	 * @return object Main instance of the class.
+	 * @since  1.0.0
+	 * @static
+	 * @see    WPRetail()
+	 * @return WPRetail - Main instance.
 	 */
-	final public static function instance() {
-		if ( is_null( static::$instance ) ) {
-			static::$instance = new static();
+	public static function instance() {
+		if ( is_null( self::$instance ) ) {
+			self::$instance = new self();
 		}
-		return static::$instance;
+		return self::$instance;
 	}
 
 	/**
-	 * Plugin Constructor.
-	 *
-	 * @since 1.0.0
+	 * WPRetail Constructor.
 	 */
 	public function __construct() {
-		// Load plugin text domain.
-			add_action( 'init', [ $this, 'load_plugin_textdomain' ], 0 );
-			add_filter( 'plugin_row_meta', [ $this, 'plugin_row_meta' ], 20, 2 );
-			add_action( 'init', [ $this, 'init' ]);
-			
+		$upload_dir                = wp_upload_dir( null, false );
+		$this->plugin_dir          = dirname( WPRETAIL_PLUGIN_FILE ) . '/';
+		$this->base_name           = plugin_basename( WPRETAIL_PLUGIN_FILE );
+		$this->version             = WPRETAIL_VERSION;
+		$this->log_dir             = $upload_dir['basedir'] . '/wpretail-logs/';
+		$this->session_cache_group = 'wpretail_session_id';
+		$this->template_debug_mode = false;
+
+		// Plugin Loaded.
+		add_action( 'plugins_loaded', [ $this, 'objects' ], 1 );
+		// WPRetail Loaded.
+		do_action( 'wpretail_loaded' );
+		// Initilize.
+		$this->init();
+		$this->init_hooks();
 	}
 
 	/**
-	 * Initialize plugin.
+	 * Features
+	 */
+	public function features() {
+		return [
+			'Products\\WPRetail_Products',
+			'Admin\\Admin_Menus',
+		];
+	}
+
+	/**
+	 * Init Hooks
 	 *
-	 * @since 1.0.0
+	 * @since      1.0.0
+	 */
+	private function init_hooks() {
+		// Hooks.
+	}
+
+	/**
+	 * Setup objects.
+	 *
+	 * @since      1.0.0
+	 */
+	public function objects() {
+		// Global objects.
+		$this->products = new \WPRetail\WPRetail_Product_Handler();
+		$this->sales    = new \WPRetail\WPRetail_Sales_Handler();
+		$this->helper   = new \WPRetail\WPRetail_Helper_Functions();
+	}
+
+	/**
+	 * Include required core files used in admin and on the frontend.
 	 */
 	public function init() {
-		new Admin_Menus();
+
+		foreach ( $this->features() as $feature ) {
+			$feature = 'WPRetail\\' . $feature;
+			new $feature();
+		}
 	}
 
 	/**
@@ -133,5 +228,4 @@ class Plugin {
 
 		return true;
 	}
-
 }
