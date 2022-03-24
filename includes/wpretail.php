@@ -159,19 +159,32 @@ final class WPRetail {
 		$this->sales    = new \WPRetail\WPRetail_Sales_Handler();
 		$this->helper   = new \WPRetail\WPRetail_Helper_Functions();
 
-		$this->helper->html(
-			'h1',
+		// Example Input Text.
+		wpretail()->helper->input(
 			[
-				'class'   => [ 'container' ],
-				'id'      => 'container',
-				'content' => 'This is content',
-				'data'    => [ 'multiple' => 'multiple' ],
-				'attr'    => [ 'multiple' => false ],
-				'closed'  => true,
+				'container' => [
+					'class' => [ 'test-class' ],
+					'id'    => 'input',
+					'data'  => [
+						'multiple' => 'ok',
+						'target'   => 'blank',
+					],
+					'attr'  => [
+						'multiple' => false,
+						'target'   => false,
+					],
+				],
+				'label'     => [
+					'content' => 'First Name',
+				],
+				'input'     => [
+					'attr' => [
+						'type' => 'text',
+						'id'   => 'input',
+					],
+				],
 			]
 		);
-
-		die;
 	}
 
 	/**

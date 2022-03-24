@@ -2,6 +2,8 @@
 
 namespace WPRetail\Traits;
 
+use function cli\input;
+
 /**
  * Core Functions.
  *
@@ -78,7 +80,7 @@ trait WPRetail_Html_Builder {
 					$this->parse_data( $arg );
 					break;
 				case 'attr':
-					$this->parse_attr( $args['attr'] );
+					$this->parse_attr( $arg );
 					break;
 			}
 		}
@@ -110,6 +112,7 @@ trait WPRetail_Html_Builder {
 				case 'a':
 				case 'b':
 				case 'i':
+				case 'label':
 					echo esc_html( $args['content'] );
 					break;
 			}
@@ -124,9 +127,7 @@ trait WPRetail_Html_Builder {
 	 * @return void
 	 */
 	public function parse_class( $class ) {
-		if ( empty( $class ) ) {
-			echo ' class="' . esc_attr( implode( ' ', $class ) ) . '"';
-		}
+		echo ' class="' . esc_attr( implode( ' ', $class ) ) . '"';
 	}
 
 	/**
@@ -164,5 +165,58 @@ trait WPRetail_Html_Builder {
 				echo '="' . esc_attr( $at ) . '"';
 			}
 		}
+	}
+
+	/**
+	 * Input.
+	 *
+	 * @param mixed $args Args.
+	 * @return void
+	 */
+	public function input( $args ) {
+		$container = [];
+		$label     = [];
+		$input     = [];
+
+		if ( ! empty( $args['container'] ) ) {
+			$container = $args['container'];
+		}
+		if ( ! empty( $container ) && ! empty( $container['class'] ) ) {
+			$container['class'] [] = 'mb-3';
+		} else {
+			$container['class'] = [ 'mb-3' ];
+		}
+
+		if ( ! empty( $args['label'] ) ) {
+			$label = $args['label'];
+		}
+		if ( ! empty( $label ) && ! empty( $label['label'] ) ) {
+			$label['class'] [] = 'form-label';
+		} else {
+			$label['class'] = [ 'form-label' ];
+		}
+
+		if ( ! empty( $args['input'] ) ) {
+			$input = $args['input'];
+		}
+		if ( ! empty( $input ) && ! empty( $input['input'] ) ) {
+			$input['class'] [] = 'form-label';
+		} else {
+			$input['class'] = [ 'form-control' ];
+		}
+
+		if ( ! empty( $input['attr']['id'] ) ) {
+			$label['attr']['for'] = $input['attr']['id'];
+		}
+
+		$label['closed'] = true;
+		$input['closed'] = true;
+
+		// Open Div.
+		$this->html( 'div', $container );
+		$this->html( 'label', $label );
+		$this->html( 'input', $input );
+		// Close Div.
+		$this->html( 'div' );
 	}
 }
