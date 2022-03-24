@@ -158,6 +158,20 @@ final class WPRetail {
 		$this->products = new \WPRetail\WPRetail_Product_Handler();
 		$this->sales    = new \WPRetail\WPRetail_Sales_Handler();
 		$this->helper   = new \WPRetail\WPRetail_Helper_Functions();
+
+		$this->helper->html(
+			'h1',
+			[
+				'class'   => [ 'container' ],
+				'id'      => 'container',
+				'content' => 'This is content',
+				'data'    => [ 'multiple' => 'multiple' ],
+				'attr'    => [ 'multiple' => false ],
+				'closed'  => true,
+			]
+		);
+
+		die;
 	}
 
 	/**
