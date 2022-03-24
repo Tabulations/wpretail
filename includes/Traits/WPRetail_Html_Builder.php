@@ -137,7 +137,7 @@ trait WPRetail_Html_Builder {
 	 * @return void
 	 */
 	public function parse_id( $id ) {
-		echo ' id="wpretail-' . esc_attr( $id ) . '"';
+		echo ' id="' . esc_attr( $id ) . '"';
 	}
 
 	/**
@@ -205,8 +205,8 @@ trait WPRetail_Html_Builder {
 			$input['class'] = [ 'form-control' ];
 		}
 
-		if ( ! empty( $input['attr']['id'] ) ) {
-			$label['attr']['for'] = $input['attr']['id'];
+		if ( ! empty( $input['id'] ) ) {
+			$label['attr']['for'] = $input['id'];
 		}
 
 		$label['closed'] = true;
@@ -215,7 +215,34 @@ trait WPRetail_Html_Builder {
 		// Open Div.
 		$this->html( 'div', $container );
 		$this->html( 'label', $label );
-		$this->html( 'input', $input );
+
+		if ( empty( $input['attr']['type'] ) ) {
+			$input['attr']['type'] = '';
+		}
+		switch ( $input['attr']['type'] ) {
+			case 'text':
+				$this->html( 'input', $input );
+				break;
+			case 'textarea':
+				unset( $input['type'] );
+				$this->html( 'textarea', $input );
+				break;
+			default:
+				if ( ! empty( $input['attr']['list'] ) && ! empty( $input['list_options'] ) ) {
+					$this->html( 'input', $input );
+					$this->html( 'datalist', [ 'id' => $input['attr']['list'] ] );
+					foreach ( $input['list_options'] as $option ) {
+						$this->html(
+							'option',
+							[
+								'attr' => [ 'value' => $option ],
+							]
+						);
+					}
+					$this->html( 'datalist' );
+				}
+				break;
+		}
 		// Close Div.
 		$this->html( 'div' );
 	}
