@@ -159,87 +159,8 @@ final class WPRetail {
 		$this->sales    = new \WPRetail\WPRetail_Sales_Handler();
 		$this->helper   = new \WPRetail\WPRetail_Helper_Functions();
 
-		echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">'; // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet
-		echo '<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>'; // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript
-
-		// Example Input Text.
-		wpretail()->helper->input(
-			[
-				'container' => [
-					'class' => [ 'test-class' ],
-					'id'    => 'first-name',
-				],
-				'label'     => [
-					'content' => 'First Name',
-				],
-				'input'     => [
-					'attr' => [
-						'type' => 'text',
-						'id'   => 'first-name',
-						'name' => 'first-name',
-					],
-				],
-			]
-		);
-
-		wpretail()->helper->input(
-			[
-				'container' => [
-					'class' => [ 'test-class' ],
-					'id'    => 'last-name',
-				],
-				'label'     => [
-					'content' => 'Last Name',
-				],
-				'input'     => [
-					'attr' => [
-						'type' => 'text',
-						'id'   => 'last-name',
-						'name' => 'last-name',
-					],
-				],
-			]
-		);
-
-		wpretail()->helper->input(
-			[
-				'container' => [
-					'class' => [ 'test-class' ],
-					'id'    => 'description',
-				],
-				'label'     => [
-					'content' => 'Desciption',
-				],
-				'input'     => [
-					'attr' => [
-						'type' => 'textarea',
-						'id'   => 'description',
-						'name' => 'description',
-					],
-				],
-			]
-		);
-
-		wpretail()->helper->input(
-			[
-				'container' => [
-					'class' => [ 'test-class' ],
-					'id'    => 'list',
-				],
-				'label'     => [
-					'content' => 'List',
-				],
-				'input'     => [
-					'attr'         => [
-						'placeholder' => 'text',
-						'id'          => 'list',
-						'name'        => 'list',
-						'list'        => 'test', // list ID Other than text 'list'.
-					],
-					'list_options' => [ 'One', 'Two', 'Three', 'Four', 'Five' ],
-				],
-			]
-		);
+		// echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">'; // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet
+		// echo '<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>'; // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript
 	}
 
 	/**

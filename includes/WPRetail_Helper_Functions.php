@@ -2,8 +2,6 @@
 
 namespace WPRetail;
 
-use WPRetail\Traits\WPRetail_Html_Builder;
-
 /**
  * Core Functions.
  *
@@ -19,7 +17,6 @@ defined( 'ABSPATH' ) || exit;
  * Sales Handler class.
  */
 class WPRetail_Helper_Functions {
-	use WPRetail_Html_Builder;
 
 	/**
 	 * Test Function
