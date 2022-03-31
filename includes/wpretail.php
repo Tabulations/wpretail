@@ -158,9 +158,7 @@ final class WPRetail {
 		$this->products = new \WPRetail\WPRetail_Product_Handler();
 		$this->sales    = new \WPRetail\WPRetail_Sales_Handler();
 		$this->helper   = new \WPRetail\WPRetail_Helper_Functions();
-
-		// echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">'; // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet
-		// echo '<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>'; // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript
+		$this->builder  = new \WPRetail\WPRetail_Html_Builder();
 	}
 
 	/**

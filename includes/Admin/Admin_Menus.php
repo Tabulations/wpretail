@@ -31,12 +31,13 @@ class Admin_Menus {
 	 */
 	public function init() {
 		if ( isset( $_GET['page'] ) && 'wpretail' === $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			wp_enqueue_style( 'wpretail_style_font', plugins_url( '/assets/fontawesome/css/all.min.css', WPRETAIL_PLUGIN_FILE ), [], WPRETAIL_VERSION );
-			wp_enqueue_style( 'wpretail_style_bootstrap', plugins_url( '/assets/bootstrap/css/bootstrap.css', WPRETAIL_PLUGIN_FILE ), [], WPRETAIL_VERSION );
-			wp_enqueue_style( 'wpretail_style_layout', plugins_url( '/assets/css/layout.css', WPRETAIL_PLUGIN_FILE ), [], WPRETAIL_VERSION );
-			wp_enqueue_script( 'wpretail_script_jquery', plugins_url( '/assets/jquery/jquery.min.js', WPRETAIL_PLUGIN_FILE ), [], WPRETAIL_VERSION, true );
-			wp_enqueue_script( 'wpretail_script_bootstrap', plugins_url( '/assets/bootstrap/js/bootstrap.js', WPRETAIL_PLUGIN_FILE ), [], WPRETAIL_VERSION, true );
-			wp_enqueue_script( 'wpretail_script_layout', plugins_url( '/assets/js/layout.js', WPRETAIL_PLUGIN_FILE ), [], WPRETAIL_VERSION, true );
+			// Styles.
+			wp_enqueue_style( 'wpretail_style_fontawesome', plugins_url( '/assets/vendors/fontawesome/css/all.min.css', WPRETAIL_PLUGIN_FILE ), [], WPRETAIL_VERSION );
+			wp_enqueue_style( 'wpretail_style_bootstrap', plugins_url( '/assets/vendors/bootstrap/css/bootstrap.min.css', WPRETAIL_PLUGIN_FILE ), [], WPRETAIL_VERSION );
+			wp_enqueue_style( 'wpretail_style_layout', plugins_url( '/assets/css/style.css', WPRETAIL_PLUGIN_FILE ), [], WPRETAIL_VERSION );
+
+			// Scripts.
+			wp_enqueue_script( 'wpretail_script_bootstrap', plugins_url( '/assets/vendors/bootstrap/js/bootstrap.bundle.min.js', WPRETAIL_PLUGIN_FILE ), ['jquery'], WPRETAIL_VERSION, true );
 		}
 	}
 
@@ -44,7 +45,7 @@ class Admin_Menus {
 	 * Add menu items.
 	 */
 	public function admin_menu() {
-		add_menu_page( esc_html__( 'WP Retail', 'wpretail' ), esc_html__( 'WP Retail', 'wpretail' ), 'manage_options', 'wpretail', [ $this, 'dashboard' ], 'dashicons-businessman', '25' );
+		add_menu_page( esc_html__( 'WP Retail', 'wpretail' ), esc_html__( 'WP Retail', 'wpretail' ), 'manage_options', 'wpretail', [ $this, 'wpretail_admin' ], 'dashicons-businessman', '25' );
 	}
 
 	/**
@@ -60,9 +61,30 @@ class Admin_Menus {
 	 *
 	 * @return void
 	 */
-	public function dashboard() {
-		// Menus.
-		$menus = $this->menus(); // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
-		include plugin_dir_path( WPRETAIL_PLUGIN_FILE ) . '/templates/layout.php';
+	public function wpretail_admin() {
+		wpretail()->builder->html('div', array('id' => 'wpretail-wrapper') ); // Opening Wrapper.
+		include plugin_dir_path( WPRETAIL_PLUGIN_FILE ) . '/views/header.php';
+		wpretail()->builder->html('div', array('id' => 'wpretail-main') ); // Opening Main.
+		$this->include_page();
+		wpretail()->builder->html('div'); // Closing Wrapper.
+	}
+
+	public function include_page() {
+		if ( isset( $_GET['page'] ) && 'wpretail' === $_GET['page'] ) {
+			if( isset($_GET['target'])) {
+				switch( $_GET['target'] ) {
+					case 'dashboard':
+						include plugin_dir_path( WPRETAIL_PLUGIN_FILE ) . '/views/dashboard.php';
+						break;
+					case 'purchase':
+						include plugin_dir_path( WPRETAIL_PLUGIN_FILE ) . '/views/purchase.php';
+						break;
+					default:
+						include plugin_dir_path( WPRETAIL_PLUGIN_FILE ) . '/views/dashboard.php';
+				}
+			} else {
+				include plugin_dir_path( WPRETAIL_PLUGIN_FILE ) . '/views/dashboard.php';
+			}
+		}
 	}
 }
