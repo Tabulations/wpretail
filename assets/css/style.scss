@@ -36,8 +36,8 @@ body {
 						a {
 							color: #fff;
 							&.active {
-								color: #1e1e1e;
-								border-bottom: 2px solid #1e1e1e;
+								color: #ffe213;
+								border-bottom: 2px solid #ffe213;
 							}
 						}
 					}
@@ -69,11 +69,11 @@ body {
 									transition: 0.5 ease-in-out;
 									&:hover {
 										background-color: #536dfe;
-										color: #fff;
+										color: #ffe213;
 									}
 									&.active {
 										background-color: #304ffe;
-										color: #fff;
+										color: #ffe213;
 									}
 								}
 							}
