@@ -1,5 +1,6 @@
 body {
 	#wpcontent {
+		padding: 0;
 		#wpretail-wrapper {
 			/* width */
 			::-webkit-scrollbar {
@@ -14,11 +15,11 @@ body {
 
 			/* Handle */
 			::-webkit-scrollbar-thumb {
-				background: #90a4ae;
+				background: #304ffe;
 				border-radius: 10px;
 			}
 			width: 100%;
-			background-color: #efefef;
+			background-color: #fff;
 			height: 88vh;
 			overflow-y: scroll;
 			a:focus {
@@ -26,17 +27,17 @@ body {
 				box-shadow: none;
 			}
 			.bg-wpretail {
-				background-color: #90a4ae;
+				background-color: #304ffe;
 				.navbar-brand {
 					color: #fff;
 				}
 				.wpretail-header.navbar-nav {
 					.nav-item {
 						a {
-							color: #1e1e1e;
+							color: #fff;
 							&.active {
-								color: #fff;
-								border-bottom: 2px solid #fff;
+								color: #1e1e1e;
+								border-bottom: 2px solid #1e1e1e;
 							}
 						}
 					}
@@ -45,45 +46,41 @@ body {
 
 			.wpretail-main {
 				.wpretail-sidebar {
-					padding-top: 20px;
-					overflow-y: scroll;
+					margin-left: 20px;
+					margin-top: 20px;
 					height: 81vh;
-					background-color: #fff;
-
+					background-color: #f6f7f9;
 					.wpretail-sidebar-label {
-						color: #90a4ae;
+						margin-left: 20px;
+						color: #1e1e1e;
 						text-decoration: none;
 						align-items: center;
 					}
 
 					ul.nav {
 						li.nav-item {
-							margin-right: 5px;
+							margin: 0;
 							a.nav-link {
+								border-radius: 0;
 								color: #1e1e1e;
 								text-decoration: none;
+								padding: 15px;
 								&.wpretail-sidebar-link {
-									margin-top: 5px;
 									transition: 0.5 ease-in-out;
 									&:hover {
-										background-color: #90a4ae;
+										background-color: #536dfe;
 										color: #fff;
 									}
 									&.active {
-										background-color: #90a4ae;
+										background-color: #304ffe;
 										color: #fff;
 									}
 								}
 							}
-							li {
-								padding: 5px;
-								margin: 0;
-								a.wpretail-sidebar-link-inner {
-									padding: 0;
-									padding-left: 7px;
-								}
-							}
 						}
+					}
+					div.user {
+						margin-left: 15px;
 					}
 				}
 			}
