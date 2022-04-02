@@ -146,6 +146,7 @@ final class WPRetail {
 	 */
 	private function init_hooks() {
 		// Hooks.
+		register_activation_hook( WPRETAIL_PLUGIN_FILE, array( 'WPRetail\WPRetail_Install', 'install' ) );
 	}
 
 	/**
