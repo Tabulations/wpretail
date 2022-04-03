@@ -113,7 +113,14 @@ class WPRetail_Html_Builder {
 				case 'b':
 				case 'i':
 				case 'label':
-					echo esc_html( $args['content'] );
+				case 'button':
+				case 'th':
+				case 'td':
+					if ( ! empty( $args['allowed_html'] ) ) {
+						echo wp_kses( $args['content'], $args['allowed_html'] );
+					} else {
+						echo esc_html( $args['content'] );
+					}
 					break;
 			}
 		}
@@ -197,7 +204,7 @@ class WPRetail_Html_Builder {
 		if ( ! empty( $args['label'] ) ) {
 			$label = $args['label'];
 		}
-		if ( ! empty( $label ) && ! empty( $label['label'] ) ) {
+		if ( ! empty( $label ) && ! empty( $label['class'] ) ) {
 			$label['class'] [] = 'form-label';
 		} else {
 			$label['class'] = [ 'form-label' ];
@@ -206,8 +213,8 @@ class WPRetail_Html_Builder {
 		if ( ! empty( $args['input'] ) ) {
 			$input = $args['input'];
 		}
-		if ( ! empty( $input ) && ! empty( $input['input'] ) ) {
-			$input['class'] [] = 'form-label';
+		if ( ! empty( $input ) && ! empty( $input['class'] ) ) {
+			$input['class'] [] = 'form-control';
 		} else {
 			$input['class'] = [ 'form-control' ];
 		}
@@ -216,12 +223,37 @@ class WPRetail_Html_Builder {
 			$label['attr']['for'] = $input['id'];
 		}
 
-		$label['closed'] = true;
-		$input['closed'] = true;
+		if ( empty( $args['tooltip'] ) ) {
+			$label['closed'] = true;
+		}
+
+		if ( empty( $args['icon'] ) ) {
+			$input['closed'] = true;
+		}
 
 		// Open Div.
 		self::html( 'div', $container );
 		self::html( 'label', $label );
+		if ( ! empty( $args['tooltip'] ) ) {
+			self::html(
+				'span',
+				[
+					'class'   => [ 'wpretail-tooltip badge bg-primary' ],
+					'data'    => [
+						'bs-toggle'    => 'tooltip',
+						'bs-html'      => true,
+						'bs-placement' => 'right',
+					],
+					'attr'    => [
+						'title'       => $args['tooltip'],
+						'aria-hidden' => true,
+					],
+					'close'   => true,
+					'content' => '?',
+				]
+			);
+			self::html( 'label' );
+		}
 
 		if ( empty( $input['type'] ) ) {
 			$input['type'] = '';
@@ -237,6 +269,21 @@ class WPRetail_Html_Builder {
 
 		if ( empty( $input['value'] ) ) {
 			$input['value'] = '';
+		}
+
+		if ( ! empty( $args['icon'] ) ) {
+			self::html( 'div', [ 'class' => [ 'input-group' ] ] );
+			if ( empty( $args['icon_after_input'] ) ) {
+				self::html( 'span', [ 'class' => [ 'input-group-text' ] ] );
+				self::html(
+					'i',
+					[
+						'class'  => [ $args['icon'] ],
+						'closed' => true,
+					]
+				);
+				self::html( 'span' );
+			}
 		}
 
 		switch ( $input['type'] ) {
@@ -365,6 +412,25 @@ class WPRetail_Html_Builder {
 				self::html( 'label', $label );
 				self::html( 'input', $input );
 				break;
+			case 'datepicker':
+				$input['class'][]       = 'wpretail-datepicker';
+				$input['attr']['name']  = $input['name'];
+				$input['attr']['value'] = $input['value'];
+				$input['attr']['type']  = 'text';
+
+				$input['data']['format'] = get_option( 'date_format' );
+
+				self::html( 'input', $input );
+
+				wp_enqueue_style( 'wpretail_style_datepicker' );
+				wp_enqueue_script( 'wpretail_script_datepicker' );
+				break;
+			case 'submit':
+				$input['class']         = array_diff( $input['class'], [ 'form-control' ] );
+				$input['attr']['name']  = $input['name'];
+				$input['attr']['value'] = $input['value'];
+				$input['attr']['type']  = 'submit';
+				self::html( 'button', $input );
 			default:
 				if ( ! empty( $input['attr']['list'] ) && ! empty( $input['list_options'] ) ) {
 					self::html( 'input', $input );
@@ -382,6 +448,22 @@ class WPRetail_Html_Builder {
 				break;
 		}
 
+		if ( ! empty( $args['icon'] ) ) {
+			if ( ! empty( $args['icon_after_input'] ) ) {
+				self::html( 'span', [ 'class' => [ 'input-group-text' ] ] );
+				self::html(
+					'i',
+					[
+						'class'  => [ $args['icon'] ],
+						'closed' => true,
+					]
+				);
+				self::html( 'span' );
+			}
+			self::html( 'div' );
+		}
+		// Close Div.
+		self::html( 'div' );
 		// Invalid Message.
 		self::html(
 			'div',
@@ -390,7 +472,52 @@ class WPRetail_Html_Builder {
 				'closed' => true,
 			]
 		);
-		// Close Div.
-		self::html( 'div' );
+	}
+
+	/**
+	 * Table
+	 */
+	public static function table( $args ) {
+		self::html( 'table', $args );
+		if ( ! empty( $args['head'] ) ) {
+			self::html( 'thead', [ 'class' => [ 'wpretail-table-head' ] ] );
+			self::html( 'tr', [ 'class' => [ 'wpretail-table-row' ] ] );
+			foreach ( $args['head'] as $th ) {
+				self::html(
+					'th',
+					[
+						'class'   => [ 'wpretail-table-th' ],
+						'content' => $th,
+						'closed'  => true,
+					]
+				);
+			}
+			self::html( 'tr' );
+			self::html( 'thead' );
+		}
+		if ( ! empty( $args['body'] ) ) {
+			self::html( 'tbody', [ 'class' => [ 'wpretail-table-bpdy' ] ] );
+			self::html( 'tr', [ 'class' => [ 'wpretail-table-row' ] ] );
+			foreach ( $args['body'] as $tr ) {
+				foreach ( $tr as $td ) {
+					self::html(
+						'td',
+						[
+							'class'   => [ 'wpretail-table-data' ],
+							'content' => $td,
+							'closed'  => true,
+						]
+					);
+				}
+			}
+			self::html( 'tr' );
+			self::html( 'tbody' );
+		}
+		self::html( 'table' );
+
+		if ( ! empty( $args['class'] && in_array( 'wpretail-datatable', $args['class'] ) ) ) {
+			wp_enqueue_style( 'wpretail_style_datatable' );
+			wp_enqueue_script( 'wpretail_script_datatable' );
+		}
 	}
 }

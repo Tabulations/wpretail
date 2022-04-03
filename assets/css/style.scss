@@ -1,7 +1,13 @@
 body {
+	.datepicker {
+		margin: 40px 0;
+	}
 	#wpcontent {
 		padding: 0;
 		#wpretail-wrapper {
+			.wpretail-tooltip {
+				font-size: 0.7em;
+			}
 			/* width */
 			::-webkit-scrollbar {
 				width: 5px;
@@ -25,6 +31,9 @@ body {
 			a:focus {
 				outline: none;
 				box-shadow: none;
+			}
+			select.form-control {
+				max-width: 100%;
 			}
 			.bg-wpretail {
 				background-color: #304ffe;

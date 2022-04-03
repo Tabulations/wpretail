@@ -135,6 +135,7 @@ final class WPRetail {
 	public function features() {
 		return [
 			'Products\\WPRetail_Products',
+			'Settings\\WPRetail_Settings',
 			'Admin\\Admin_Menus',
 		];
 	}

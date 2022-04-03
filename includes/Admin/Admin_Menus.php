@@ -33,11 +33,15 @@ class Admin_Menus {
 		if ( isset( $_GET['page'] ) && 'wpretail' === $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			// Styles.
 			wp_enqueue_style( 'wpretail_style_fontawesome', plugins_url( '/assets/vendors/fontawesome/css/all.min.css', WPRETAIL_PLUGIN_FILE ), [], WPRETAIL_VERSION );
-			wp_enqueue_style( 'wpretail_style_bootstrap', plugins_url( '/assets/vendors/bootstrap/css/bootstrap.min.css', WPRETAIL_PLUGIN_FILE ), [], WPRETAIL_VERSION );
 			wp_enqueue_style( 'wpretail_style_layout', plugins_url( '/assets/css/style.css', WPRETAIL_PLUGIN_FILE ), [], WPRETAIL_VERSION );
+			wp_enqueue_style( 'wpretail_style_bootstrap', plugins_url( '/assets/vendors/bootstrap/css/bootstrap.min.css', WPRETAIL_PLUGIN_FILE ), [], WPRETAIL_VERSION );
+			wp_register_style( 'wpretail_style_datepicker', plugins_url( '/assets/vendors/bootstrap-datepicker/css/bootstrap-datepicker3.min.css', WPRETAIL_PLUGIN_FILE ), [], WPRETAIL_VERSION );
+			wp_register_style( 'wpretail_style_datatable', plugins_url( '/assets/vendors/datatables/datatables.min.css', WPRETAIL_PLUGIN_FILE ), [], WPRETAIL_VERSION );
 
 			// Scripts.
 			wp_enqueue_script( 'wpretail_script_bootstrap', plugins_url( '/assets/vendors/bootstrap/js/bootstrap.bundle.min.js', WPRETAIL_PLUGIN_FILE ), [ 'jquery' ], WPRETAIL_VERSION, true );
+			wp_register_script( 'wpretail_script_datepicker', plugins_url( '/assets/vendors/bootstrap-datepicker/js/bootstrap-datepicker.min.js', WPRETAIL_PLUGIN_FILE ), [ 'jquery' ], WPRETAIL_VERSION, true );
+			wp_register_script( 'wpretail_script_datatable', plugins_url( '/assets/vendors/datatables/datatables.min.js', WPRETAIL_PLUGIN_FILE ), [ 'jquery' ], WPRETAIL_VERSION, true );
 		}
 	}
 
