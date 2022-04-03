@@ -520,4 +520,61 @@ class WPRetail_Html_Builder {
 			wp_enqueue_script( 'wpretail_script_datatable' );
 		}
 	}
+
+	/**
+	 * Forms
+	 *
+	 * @param mixed $args
+	 * @return void
+	 */
+	public static function form( $args ) {
+		$form_args  = $args['form_args'];
+		$input_args = $args['input_args'];
+		self::form_modal( $form_args );
+		self::html( 'form', $form_args );
+		if(empty($form_args['is_modal']) || true !== $form_args['is_modal']) {
+			self::html('h4', ['class' => ['form-title mb-4'], 'content' => $form_args['form_title'], 'closed' => true]);
+		}
+		self::html( 'div', [ 'class' => ['container mb-3'] ] );
+		self::html( 'div', [ 'class' => ['row'] ] );
+		foreach ( $input_args as $input ) {
+			if ( empty( $input['col'] ) ) {
+				$input['col'] = 'col-md-12';
+			}
+			echo '<div class="' . $input['col'] . '">';
+			self::input( $input );
+			echo '</div>';
+		}
+		self::html( 'div' );
+		self::html( 'div' );
+		if(empty($form_args['is_modal']) || true !== $form_args['is_modal']) {
+			self::html('button', ['attr' => ['type' => 'button'], 'class' => ['btn btn-primary ' . esc_attr( $form_args['form_submit_id'] )], 'content' => $form_args['form_submit_label'], 'closed' => true]);
+		}
+		self::html( 'form' );
+		self::form_modal( $form_args, true );
+	}
+
+	public static function form_modal( $form_args, $is_colosed = false ) {
+		if ( ! empty( $form_args['is_modal'] ) && true === $form_args['is_modal'] ) {
+			if ( $is_colosed ) {
+				echo '</div>';
+				echo '<div class="modal-footer">';
+				echo '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>';
+				echo '<button type="button" class="btn btn-primary ' . esc_attr( $form_args['form_submit_id'] ) . '">' . wp_kses_post( $form_args['form_submit_label'] ) . '</button>';
+				echo '</div>';
+				echo '</div>';
+				echo '</div>';
+				echo '</div>';
+				return;
+			}
+			echo '<div class="wpretail-modal modal fade" id="' . esc_attr( $form_args['id'] ) . '" tabindex="-1" aria-labelledby="' . esc_attr( $form_args['id'] ) . 'Label" aria-hidden="true">';
+			echo '<div class="modal-dialog ' . $form_args['modal'] . '">';
+			echo '<div class="modal-content">';
+			echo '<div class="modal-header">';
+			echo '<h5 class="modal-title" id="' . esc_attr( $form_args['id'] ) . 'Label">' . wp_kses_post( $form_args['form_title'] ) . '</h5>';
+			echo '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
+			echo '</div>';
+			echo '<div class="modal-body">';
+		}
+	}
 }

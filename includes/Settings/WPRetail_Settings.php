@@ -25,20 +25,22 @@ class WPRetail_Settings {
 		add_filter( 'wpretail_settings_options', [ $this, 'options' ] );
 		add_action( 'wpretail_view_business_setting', [ $this, 'view_business_setting' ] );
 		add_action( 'wpretail_view_location_setting', [ $this, 'view_location_setting' ] );
+
+		add_filter( 'wpretail_form_fields_options', [ $this, 'form_fields_option' ] );
 	}
 
 	/**
-	 * Buisness Settinh View.
+	 * Fields Options
 	 *
+	 * @param mixed $field_options
 	 * @return void
 	 */
-	public function view_business_setting() {
-
+	public function form_fields_option( $field_options ) {
 		$currencies = [];
 		foreach ( wpretail()->helper->wpretail_get_currencies() as $key => $currency ) {
 			$currencies[ $key ] = $currency['name'];
 		}
-		$settings = [
+		$business_settings = [
 			'business_name'             => [
 				'label' => [
 					'content' => __( 'Business Name' ) . '*',
@@ -48,6 +50,7 @@ class WPRetail_Settings {
 					'name' => 'business_name',
 					'id'   => 'business_name',
 				],
+				'col' => 'col-md-4'
 			],
 			'start_date'                => [
 				'label'            => [
@@ -61,6 +64,7 @@ class WPRetail_Settings {
 				],
 				'icon'             => 'fa-solid fa-calendar',
 				'icon_after_input' => true,
+				'col' => 'col-md-4'
 			],
 			'profit_percent'            => [
 				'label' => [
@@ -72,6 +76,7 @@ class WPRetail_Settings {
 					'id'   => 'profit_percent',
 				],
 				'icon'  => 'fa-solid fa-circle-plus',
+				'col' => 'col-md-4'
 			],
 			'currency'                  => [
 				'label' => [
@@ -84,6 +89,7 @@ class WPRetail_Settings {
 					'options' => $currencies,
 				],
 				'icon'  => 'fa-solid fa-dollar-sign',
+				'col' => 'col-md-4'
 			],
 
 			'currency_symbol_placement' => [
@@ -99,6 +105,7 @@ class WPRetail_Settings {
 						'after'  => __( 'After amount' ),
 					],
 				],
+				'col' => 'col-md-4'
 			],
 
 			'logo'                      => [
@@ -110,6 +117,7 @@ class WPRetail_Settings {
 					'name' => 'logo',
 					'id'   => 'logo',
 				],
+				'col' => 'col-md-4'
 			],
 
 			'financial_month_start'     => [
@@ -137,6 +145,7 @@ class WPRetail_Settings {
 				],
 				'icon'             => 'fa-solid fa-calendar',
 				'icon_after_input' => true,
+				'col' => 'col-md-4'
 			],
 
 			'stock_accounting_method'   => [
@@ -153,6 +162,7 @@ class WPRetail_Settings {
 					],
 				],
 				'icon'  => 'fa-solid fa-calculator',
+				'col' => 'col-md-4'
 			],
 
 			'transaction_edit_days'     => [
@@ -165,6 +175,7 @@ class WPRetail_Settings {
 					'id'   => 'transaction_edit_days',
 				],
 				'icon'  => 'fa-solid fa-pen-to-square',
+				'col' => 'col-md-4'
 			],
 
 			'date_format'               => [
@@ -183,6 +194,7 @@ class WPRetail_Settings {
 					],
 				],
 				'icon'  => 'fa-solid fa-calculator',
+				'col' => 'col-md-4'
 			],
 
 			'time_format'               => [
@@ -199,44 +211,11 @@ class WPRetail_Settings {
 					],
 				],
 				'icon'  => 'fa-solid fa-calculator',
+				'col' => 'col-md-4'
 			],
 
 		];
-
-		wpretail()->builder->html( 'div', [ 'class' => [ 'container card p-5' ] ] );
-		wpretail()->builder->html( 'div', [ 'class' => [ 'row' ] ] );
-		foreach ( $settings as $id => $setting ) {
-			wpretail()->builder->html( 'div', [ 'class' => [ 'col-md-4' ] ] );
-			wpretail()->builder->input( $setting );
-			wpretail()->builder->html( 'div' );
-		}
-
-		wpretail()->builder->html( 'div' );
-		wpretail()->builder->input(
-			[
-				'input' => [
-					'type'    => 'submit',
-					'name'    => 'update_business_setting',
-					'id'      => 'update_business_setting',
-					'content' => __( 'Update Setting' ),
-					'class'   => [ 'mt-3 btn btn-primary' ],
-				],
-			]
-		);
-		wpretail()->builder->html( 'div' );
-	}
-
-	/**
-	 * Location Settinh View.
-	 *
-	 * @return void
-	 */
-	public function view_location_setting() {
-		$currencies = [];
-		foreach ( wpretail()->helper->wpretail_get_currencies() as $key => $currency ) {
-			$currencies[ $key ] = $currency['name'];
-		}
-		$settings = [
+		$location_settings = [
 			'location_id'         => [
 				'label' => [
 					'content' => __( 'Location ID' ) . '*',
@@ -246,6 +225,7 @@ class WPRetail_Settings {
 					'name' => 'location_id',
 					'id'   => 'location_id',
 				],
+				'col'   => 'col-md-6',
 			],
 			'landmark'            => [
 				'label' => [
@@ -256,6 +236,7 @@ class WPRetail_Settings {
 					'name' => 'landmark',
 					'id'   => 'landmark',
 				],
+				'col'   => 'col-md-6',
 			],
 			'city'                => [
 				'label' => [
@@ -266,6 +247,7 @@ class WPRetail_Settings {
 					'name' => 'city',
 					'id'   => 'city',
 				],
+				'col'   => 'col-md-6',
 			],
 			'zipcode'             => [
 				'label' => [
@@ -276,6 +258,7 @@ class WPRetail_Settings {
 					'name' => 'zipcode',
 					'id'   => 'zipcode',
 				],
+				'col'   => 'col-md-6',
 			],
 
 			'state'               => [
@@ -287,6 +270,7 @@ class WPRetail_Settings {
 					'name' => 'state',
 					'id'   => 'state',
 				],
+				'col'   => 'col-md-6',
 			],
 
 			'country'             => [
@@ -298,6 +282,7 @@ class WPRetail_Settings {
 					'name' => 'country',
 					'id'   => 'country',
 				],
+				'col'   => 'col-md-6',
 			],
 
 			'mobile'              => [
@@ -309,6 +294,7 @@ class WPRetail_Settings {
 					'name' => 'mobile',
 					'id'   => 'mobile',
 				],
+				'col'   => 'col-md-6',
 			],
 
 			'alt_mobile'          => [
@@ -320,6 +306,7 @@ class WPRetail_Settings {
 					'name' => 'alt_mobile',
 					'id'   => 'alt_mobile',
 				],
+				'col'   => 'col-md-6',
 			],
 			'email'               => [
 				'label' => [
@@ -330,6 +317,7 @@ class WPRetail_Settings {
 					'name' => 'email',
 					'id'   => 'email',
 				],
+				'col'   => 'col-md-6',
 			],
 
 			'website'             => [
@@ -341,6 +329,7 @@ class WPRetail_Settings {
 					'name' => 'website',
 					'id'   => 'website',
 				],
+				'col'   => 'col-md-6',
 			],
 			'invoice_scheme'      => [
 				'label' => [
@@ -354,6 +343,7 @@ class WPRetail_Settings {
 						1 => 'Default',
 					],
 				],
+				'col'   => 'col-md-6',
 			],
 			'invoice_layout_pos'  => [
 				'label' => [
@@ -367,6 +357,7 @@ class WPRetail_Settings {
 						1 => 'Default',
 					],
 				],
+				'col'   => 'col-md-6',
 			],
 			'invoice_layout_sale' => [
 				'label' => [
@@ -380,6 +371,7 @@ class WPRetail_Settings {
 						1 => 'Default',
 					],
 				],
+				'col'   => 'col-md-6',
 			],
 			'selling_price_group' => [
 				'label' => [
@@ -393,29 +385,70 @@ class WPRetail_Settings {
 						1 => 'Default',
 					],
 				],
+				'col'   => 'col-md-6',
 			],
 		];
 
-		wpretail()->builder->html( 'div', [ 'class' => [ 'container card p-5' ] ] );
-		wpretail()->builder->html( 'div', [ 'class' => [ 'row' ] ] );
-		wpretail()->builder->html( 'div', [ 'class' => [ 'col-md-12 mb-3' ] ] );
+		return array_filter(
+			array_merge(
+				$field_options,
+				[ 'business_settings' => $business_settings, 'business_location_setting' => $location_settings,  ]
+			)
+		);
+	}
+
+	/**
+	 * Buisness Settinh View.
+	 *
+	 * @return void
+	 */
+	public function view_business_setting() {
+
+		$field_options = apply_filters( 'wpretail_form_fields_options', [] );
+
+		$settings =  $field_options['business_settings'];
+
+		$args = [
+			'form_args'  => [
+				'id'                => 'wpretail-business-setting',
+				'class'             => [ 'wpretail-business-setting' ],
+				'attr'              => [
+					'action' => admin_url(),
+					'method' => 'post',
+				],
+				'form_title'        => __( 'Add Business Location', 'wpreatil' ),
+				'form_submit_id'    => 'wpretail_add_location',
+				'form_submit_label' => __( 'Add Location', 'wpretail' ),
+			],
+			'input_args' => $settings,
+		];
+
+		wpretail()->builder->form( $args );
+	}
+
+	/**
+	 * Location Settinh View.
+	 *
+	 * @return void
+	 */
+	public function view_location_setting() {
+		$field_options = apply_filters( 'wpretail_form_fields_options', [] );
+
+		$settings =  $field_options['business_location_setting'];
 		wpretail()->builder->html(
 			'button',
 			[
-				'id'      => 'update_business_setting',
+				'id'      => 'add_location',
 				'content' => __( 'Add Location' ),
 				'class'   => [ 'mb-3 btn btn-primary' ],
 				'closed'  => true,
-				'attr'    => [ 'type'=> 'button' ],
+				'attr'    => [ 'type' => 'button' ],
 				'data'    => [
-					'bs-toggle'      => 'modal',
-					'bs-target' => '#addNewLocation',
+					'bs-toggle' => 'modal',
+					'bs-target' => '#wpretail-location-setting',
 				],
 			]
 		);
-
-		wpretail()->builder->html( 'div' );
-		wpretail()->builder->html( 'div', [ 'class' => [ 'col-md-12 mb-3' ] ] );
 
 		wpretail()->builder->table(
 			[
@@ -450,54 +483,29 @@ class WPRetail_Settings {
 					],
 				],
 				'class' => [ 'wpretail-datatable', 'table table-primary mt-5' ],
+				'col'   => 'col-md-12',
 
 			]
 		);
-		wpretail()->builder->html( 'div' );
-		wpretail()->builder->html( 'div' );
-		wpretail()->builder->html( 'div' );
 
-		// Modal.
-
-		echo '<div class="modal fade" id="addNewLocation" tabindex="-1" aria-labelledby="addNewLocationLabel" aria-hidden="true">';
-		echo '<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">';
-		echo '<div class="modal-content">';
-		echo '<div class="modal-header">';
-		echo '<h5 class="modal-title" id="addNewLocationLabel">' . esc_html__( 'Add New Location', 'wpretail' ) . '</h5>';
-		echo '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
-		echo '</div>';
-		echo '<div class="modal-body">';
-		echo '<div class="container">';
-		echo '<div class="row">';
-		wpretail()->builder->html( 'div', [ 'class' => [ 'col-md-12 mb-3' ] ] );
-		wpretail()->builder->input(
-			[
-				'label' => [
-					'content' => __( 'Business Name' ) . '*',
+		$args = [
+			'form_args'  => [
+				'id'                => 'wpretail-location-setting',
+				'class'             => [ 'wpretail-location-setting card' ],
+				'attr'              => [
+					'action' => admin_url(),
+					'method' => 'post',
 				],
-				'input' => [
-					'type' => 'text',
-					'name' => 'business_name',
-					'id'   => 'business_name',
-				],
+				'form_title'        => __( 'Add Business Location', 'wpreatil' ),
+				'form_submit_id'    => 'wpretail_add_location',
+				'form_submit_label' => __( 'Add Location', 'wpretail' ),
+				'is_modal'          => true,
+				'modal'             => 'modal-lg modal-dialog-centered modal-dialog-scrollable',
 			],
-		);
-		wpretail()->builder->html( 'div' );
-		foreach ( $settings as $id => $setting ) {
-			wpretail()->builder->html( 'div', [ 'class' => [ 'col-md-6' ] ] );
-			wpretail()->builder->input( $setting );
-			wpretail()->builder->html( 'div' );
-		}
-		echo '</div>';
-		echo '</div>';
-		echo '</div>';
-		echo '<div class="modal-footer">';
-		echo '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>';
-		echo '<button type="button" class="btn btn-primary wpretail-add-location">'.esc_html__( 'Add Location', 'wpretail' ).'</button>';
-		echo '</div>';
-		echo '</div>';
-		echo '</div>';
-		echo '</div>';
+			'input_args' => $settings,
+		];
+
+		wpretail()->builder->form( $args );
 	}
 
 	/**
