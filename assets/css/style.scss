@@ -39,6 +39,14 @@ body {
 				margin: 0;
 				padding: 0;
 			}
+			ul.wpretail-errors {
+				margin: -15px 0 0 0;
+				padding: 0;
+				list-style: none;
+				li {
+					margin: 0;
+				}
+			}
 			.bg-wpretail {
 				background-color: #304ffe;
 				.navbar-brand {

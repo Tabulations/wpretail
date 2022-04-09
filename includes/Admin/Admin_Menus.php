@@ -42,7 +42,18 @@ class Admin_Menus {
 			wp_enqueue_script( 'wpretail_script_bootstrap', plugins_url( '/assets/vendors/bootstrap/js/bootstrap.bundle.min.js', WPRETAIL_PLUGIN_FILE ), [ 'jquery' ], WPRETAIL_VERSION, true );
 			wp_register_script( 'wpretail_script_datepicker', plugins_url( '/assets/vendors/bootstrap-datepicker/js/bootstrap-datepicker.min.js', WPRETAIL_PLUGIN_FILE ), [ 'jquery' ], WPRETAIL_VERSION, true );
 			wp_register_script( 'wpretail_script_datatable', plugins_url( '/assets/vendors/datatables/datatables.min.js', WPRETAIL_PLUGIN_FILE ), [ 'jquery' ], WPRETAIL_VERSION, true );
+			wp_register_script( 'wpretail_script_setting', plugins_url( '/assets/js/wpretail-settings.js', WPRETAIL_PLUGIN_FILE ), [ 'jquery' ], WPRETAIL_VERSION, true );
+			wp_localize_script(
+				'wpretail_script_setting',
+				'wpretailSettingsParams',
+				[
+					'nonce' => wp_create_nonce( 'wpretail_nonce' ),
+					'ajax_url' => admin_url( 'admin-ajax.php' )
+				]
+			);
+			wp_enqueue_script( 'wpretail_script_setting' );
 		}
+
 	}
 
 	/**

@@ -75,7 +75,6 @@ class WPRetail_Install {
 	public static function install_actions() {
 		if ( ! empty( $_GET['do_update_wpretail'] ) ) {
 			check_admin_referer( 'wpretail_db_update', 'evf_db_update_nonce' );
-			self::update();
 		}
 		if ( ! empty( $_GET['force_update_wpretail'] ) ) {
 			do_action( 'wp_' . get_current_blog_id() . '_wpretail_updater_cron' );
@@ -250,7 +249,7 @@ class WPRetail_Install {
 			CREATE TABLE {$wpdb->prefix}wpretail_business (
 				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 				name text NOT NULL,
-				currency_id BIGINT UNSIGNED NOT NULL,
+				currency_id VARCHAR(10) NOT NULL,
 				start_date DATETIME NULL,
 				tax_number_1 VARCHAR(100) NOT NULL,
 				tax_label_1 VARCHAR(10) NOT NULL,
@@ -261,7 +260,6 @@ class WPRetail_Install {
 				fiscal_year_start_month TINYINT DEFAULT 1,
 				accounting_method ENUM('fifo','lifo','avco') DEFAULT 'fifo',
 				default_sale_discount DECIMAL(5,2) NULL,
-				FOREIGN KEY(currency_id) REFERENCES {$wpdb->prefix}wpretail_currencies(id),
 				logo text NULL,
 				sku_prefix text NULL,
 				enable_tooltip BOOLEAN DEFAULT 1,
@@ -411,7 +409,7 @@ class WPRetail_Install {
 		}
 
 		if ( ! isset( $wp_roles ) ) {
-			$wp_roles = new WP_Roles(); // @codingStandardsIgnoreLine
+			$wp_roles = new \WP_Roles(); // @codingStandardsIgnoreLine
 		}
 
 		$capabilities = self::get_core_capabilities();

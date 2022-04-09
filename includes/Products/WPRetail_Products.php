@@ -2,6 +2,8 @@
 
 namespace WPRetail\Products;
 
+use WPRetail;
+
 /**
  * Core Functions.
  *
