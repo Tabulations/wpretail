@@ -54,6 +54,13 @@ abstract class WPRetail_Sanitizer {
 	public $handle;
 
 	/**
+	 * Event.
+	 *
+	 * @var mixed
+	 */
+	public $event;
+
+	/**
 	 * Sanitized Post Data
 	 *
 	 * @return $sanitized_fields Sanized fields.
@@ -67,6 +74,13 @@ abstract class WPRetail_Sanitizer {
 				$this->errors['message'] = __( 'Target couldnot be found, Please reload the page and try again', 'wpretail' );
 				return;
 			};
+
+			// Detecting Delete Action.
+			if ( preg_match( '/wpretail_list/', $this->target ) ) {
+				$this->event['action'] = isset( $_POST['event'] ) ? sanitize_text_field( wp_unslash( $_POST['event'] ) ) : '';
+				$this->event['id']     = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '';
+				return;
+			}
 
 			$this->handle = str_replace( 'wpretail_', '', $this->target );
 

@@ -37,6 +37,7 @@ class WPRetail_Settings {
 
 		// DB Handler.
 		add_action( 'wpretail_business_settings_handler', [ $this, 'business_setting_handler' ] );
+		add_action( 'wpretail_list_busiless_setting_handler', [ $this, 'list_business_setting_handler' ] );
 	}
 
 	/**
@@ -78,6 +79,35 @@ class WPRetail_Settings {
 			}
 		} catch ( Exception $e ) {
 			$ajax->errors['message'] = $e->getMessage();
+		}
+	}
+
+	/**
+	 * List Business Setting Handler.
+	 *
+	 * @param mixed $ajax Ajax Object.
+	 * @return void
+	 */
+	public function list_business_setting_handler( $ajax ) {
+		if ( ! empty( $ajax->event ) ) {
+			if ( ! empty( $ajax->event['action'] ) && ! empty( $ajax->event['id'] ) && 'delete' === $ajax->event['action'] ) {
+				$db    = new WPRetail\Db\WPRetail_Db( 'wpretail_business' );
+				$where = [ 'id' => $ajax->event['id'] ]; // Business ID is always 1.
+				try {
+					$id = $db->update( [ 'status' => false ], $where );
+					if ( $id ) {
+						$ajax->success['message'] = __( 'Business Removed Successsfully', 'wpretail' );
+					} else {
+						$ajax->errors['message'] = __( 'Business Removed Successsfully', 'wpretail' );
+					}
+				} catch ( \Exception $e ) {
+					$ajax->errors['message'] = $e->getMessage();
+				}
+			} else {
+				$ajax->errors['message'] = __( 'Object not found, Please try again', 'wpretail' );
+			}
+		} else {
+			$ajax->errors['message'] = __( 'Event not found, Please try again', 'wpretail' );
 		}
 	}
 
@@ -146,6 +176,11 @@ class WPRetail_Settings {
 					'type' => 'text',
 					'name' => 'business_name',
 					'id'   => 'business_name',
+					'attr' => [
+						'required',
+						'min' => 5,
+						'max' => 15,
+					],
 				],
 				'col'         => 'col-md-4',
 				'validations' => [ 'required', 'min:5', 'max:15' ],
@@ -579,61 +614,50 @@ class WPRetail_Settings {
 			]
 		);
 
+		$db = new WPRetail\Db\WPRetail_Db( 'wpretail_business' );
+
 		wpretail()->builder->table(
 			[
-				'head'  => [
-					__( 'Name', 'wpretail' ),
-					__( 'Location ID', 'wpretail' ),
-					__( 'Landmark', 'wpretail' ),
-					__( 'City', 'wpretail' ),
-					__( 'Zipcode', 'wpretail' ),
-					__( 'State', 'wpretail' ),
-					__( 'Country', 'wpretail' ),
-					__( 'Price Group', 'wpretail' ),
-					__( 'Invoice Scheme', 'wpretail' ),
-					__( 'Invoide Layout for Pos', 'wpretail' ),
-					__( 'Invoide Layout for Sale', 'wpretail' ),
-					__( 'Action', 'wpretail' ),
+				'head'    => [
+					'name'         => __( 'Name', 'wpretail' ),
+					'currency_id'  => __( 'Currency', 'wpretail' ),
+					'start_date'   => __( 'Start Date', 'wpretail' ),
+					'tax_number_1' => __( 'Tax Number', 'wpretail' ),
+					'tax_label_1'  => __( 'Tax Label', 'wpretail' ),
 				],
-				'body'  => [
-					[
-						'test',
-						'test',
-						'test',
-						'test',
-						'test',
-						'test',
-						'test',
-						'test',
-						'test',
-						'test',
-						'test',
-						'test',
+				'actions' => [
+					'options'        => [
+						'edit',
+						'delete',
 					],
+					'delete_confirm' => __( 'Are you sure you want to remove?', 'wpretail' ),
+					'update_confirm' => __( 'Are you sure you want to update?', 'wpretail' ),
 				],
-				'class' => [ 'wpretail-datatable', 'table table-primary mt-5' ],
-				'col'   => 'col-md-12',
+				'id'      => 'wpretail_list_busiless_setting',
+				'body'    => $db->get_business(),
+				'class'   => [ 'wpretail-datatable', 'table table-primary mt-5' ],
+				'col'     => 'col-md-12',
 
 			]
 		);
 
-		$args = [
-			'form_args'  => [
-				'id'                => 'wpretail-location-setting',
-				'class'             => [ 'wpretail-location-setting card' ],
-				'attr'              => [
-					'action' => admin_url(),
-					'method' => 'post',
+			$args = [
+				'form_args'  => [
+					'id'                => 'wpretail-location-setting',
+					'class'             => [ 'wpretail-location-setting card' ],
+					'attr'              => [
+						'action' => admin_url(),
+						'method' => 'post',
+					],
+					'form_title'        => __( 'Add Business Location', 'wpretail' ),
+					'form_submit_id'    => 'wpretail_add_location',
+					'form_submit_label' => __( 'Add Location', 'wpretail' ),
+					'is_modal'          => true,
+					'modal'             => 'modal-lg modal-dialog-centered modal-dialog-scrollable',
 				],
-				'form_title'        => __( 'Add Business Location', 'wpretail' ),
-				'form_submit_id'    => 'wpretail_add_location',
-				'form_submit_label' => __( 'Add Location', 'wpretail' ),
-				'is_modal'          => true,
-				'modal'             => 'modal-lg modal-dialog-centered modal-dialog-scrollable',
-			],
-			'input_args' => $settings,
-		];
+				'input_args' => $settings,
+			];
 
-		wpretail()->builder->form( $args );
+			wpretail()->builder->form( $args );
 	}
 }

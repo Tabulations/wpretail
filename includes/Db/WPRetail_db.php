@@ -70,4 +70,26 @@ class WPRetail_Db {
 			$where
 		);
 	}
+
+	/**
+	 * Get Business.
+	 *
+	 * @param mixed $id ID.
+	 * @return mixed $businesss Business.
+	 */
+	public function get_business( $id = null ) {
+		if ( ! empty( $id ) ) {
+			$business = $this->db->get_results(
+				$this->db->prepare(
+					"SELECT * FROM {$this->db->prefix}wpretail_business WHERE `id` = %s",
+					$id
+				)
+			);
+		} else {
+			$business = $this->db->get_results(
+				"SELECT * FROM {$this->db->prefix}wpretail_business WHERE status = TRUE"
+			);
+		}
+		return (array) $business;
+	}
 }

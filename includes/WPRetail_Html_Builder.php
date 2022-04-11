@@ -495,25 +495,96 @@ class WPRetail_Html_Builder {
 					]
 				);
 			}
+			if ( ! empty( $args['actions']['options'] ) ) {
+				self::html(
+					'th',
+					[
+						'class'   => [ 'wpretail-table-th' ],
+						'content' => ! empty( $args['actions']['title'] ) ? $args['actions']['title'] : '',
+						'closed'  => true,
+					]
+				);
+			}
 			self::html( 'tr' );
 			self::html( 'thead' );
+		} else {
+			return;
 		}
 		if ( ! empty( $args['body'] ) ) {
 			self::html( 'tbody', [ 'class' => [ 'wpretail-table-bpdy' ] ] );
-			self::html( 'tr', [ 'class' => [ 'wpretail-table-row' ] ] );
 			foreach ( $args['body'] as $tr ) {
-				foreach ( $tr as $td ) {
+				self::html( 'tr', [ 'class' => [ 'wpretail-table-row' ] ] );
+				$tr = (array) $tr;
+				foreach ( array_keys( $args['head'] ) as $td ) {
 					self::html(
 						'td',
 						[
 							'class'   => [ 'wpretail-table-data' ],
-							'content' => $td,
+							'content' => $tr[ $td ],
 							'closed'  => true,
 						]
 					);
 				}
+				if ( ! empty( $args['actions']['options'] ) ) {
+					self::html(
+						'td',
+						[
+							'class' => [ 'wpretail-table-data' ],
+						]
+					);
+					foreach ( $args['actions']['options'] as $action ) {
+						switch ( $action ) {
+							case 'edit':
+								self::html(
+									'button',
+									[
+										'class' => [ 'btn btn-primary wpretail-table-edit ml-5' ],
+										'data'  => [
+											'id'      => $tr['id'],
+											'confirm' => ! empty( $args['actions']['update_confirm'] ) ? $args['actions']['update_confirm'] : '',
+										],
+									]
+								);
+								self::html(
+									'i',
+									[
+										'class'  => [ 'fas fa-edit' ],
+										'closed' => true,
+									]
+								);
+								self::html(
+									'button'
+								);
+								break;
+							case 'delete':
+								self::html(
+									'button',
+									[
+										'class' => [ 'btn btn-danger wpretail-table-delete ml-5' ],
+										'data'  => [
+											'id'      => $tr['id'],
+											'confirm' => ! empty( $args['actions']['delete_confirm'] ) ? $args['actions']['delete_confirm'] : '',
+										],
+									]
+								);
+								self::html(
+									'i',
+									[
+										'class'  => [ 'fas fa-remove' ],
+										'closed' => true,
+									]
+								);
+								self::html(
+									'button'
+								);
+						}
+					}
+					self::html(
+						'td'
+					);
+				}
+				self::html( 'tr' );
 			}
-			self::html( 'tr' );
 			self::html( 'tbody' );
 		}
 

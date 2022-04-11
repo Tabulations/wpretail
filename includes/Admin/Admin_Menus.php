@@ -37,6 +37,7 @@ class Admin_Menus {
 			wp_enqueue_style( 'wpretail_style_bootstrap', plugins_url( '/assets/vendors/bootstrap/css/bootstrap.min.css', WPRETAIL_PLUGIN_FILE ), [], WPRETAIL_VERSION );
 			wp_register_style( 'wpretail_style_datepicker', plugins_url( '/assets/vendors/bootstrap-datepicker/css/bootstrap-datepicker3.min.css', WPRETAIL_PLUGIN_FILE ), [], WPRETAIL_VERSION );
 			wp_register_style( 'wpretail_style_datatable', plugins_url( '/assets/vendors/datatables/datatables.min.css', WPRETAIL_PLUGIN_FILE ), [], WPRETAIL_VERSION );
+			wp_enqueue_style( 'wpretail_style_jconfirm', plugins_url( '/assets/vendors/jconfirm/jquery-confirm.min.css', WPRETAIL_PLUGIN_FILE ), [], WPRETAIL_VERSION );
 
 			// Scripts.
 			wp_enqueue_script( 'wpretail_script_bootstrap', plugins_url( '/assets/vendors/bootstrap/js/bootstrap.bundle.min.js', WPRETAIL_PLUGIN_FILE ), [ 'jquery' ], WPRETAIL_VERSION, true );
@@ -47,11 +48,13 @@ class Admin_Menus {
 				'wpretail_script_setting',
 				'wpretailSettingsParams',
 				[
-					'nonce' => wp_create_nonce( 'wpretail_nonce' ),
-					'ajax_url' => admin_url( 'admin-ajax.php' )
+					'nonce'    => wp_create_nonce( 'wpretail_nonce' ),
+					'ajax_url' => admin_url( 'admin-ajax.php' ),
 				]
 			);
 			wp_enqueue_script( 'wpretail_script_setting' );
+			wp_enqueue_script( 'wpretail_script_jconfirm', plugins_url( '/assets/vendors/jconfirm/jquery-confirm.min.js', WPRETAIL_PLUGIN_FILE ), [ 'jquery' ], WPRETAIL_VERSION, true );
+
 		}
 
 	}
@@ -84,10 +87,15 @@ class Admin_Menus {
 		wpretail()->builder->html( 'div' ); // Closing Wrapper.
 	}
 
+	/**
+	 * Include Page.
+	 *
+	 * @return void
+	 */
 	public function include_page() {
-		if ( isset( $_GET['page'] ) && 'wpretail' === $_GET['page'] ) {
-			if ( isset( $_GET['target'] ) ) {
-				switch ( $_GET['target'] ) {
+		if ( isset( $_GET['page'] ) && 'wpretail' === $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( isset( $_GET['target'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				switch ( $_GET['target'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 					case 'dashboard':
 						include plugin_dir_path( WPRETAIL_PLUGIN_FILE ) . '/views/dashboard.php';
 						break;
