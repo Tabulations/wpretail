@@ -301,6 +301,8 @@ class WPRetail_Settings {
 	 */
 	public function form_fields_option( $field_options = [] ) {
 		$currencies = [];
+		$db         = new WPRetail\Db\WPRetail_Db( 'wpretail_business_location' );
+		$buisness   = $db->get_business( '1' ); // Always.
 		foreach ( wpretail()->helper->wpretail_get_currencies() as $key => $currency ) {
 			$currencies[ $key ] = $currency['name'];
 		}
@@ -310,10 +312,11 @@ class WPRetail_Settings {
 					'content' => __( 'Business Name', 'wpretail' ) . '*',
 				],
 				'input'       => [
-					'type' => 'text',
-					'name' => 'business_name',
-					'id'   => 'business_name',
-					'attr' => [
+					'type'  => 'text',
+					'name'  => 'business_name',
+					'id'    => 'business_name',
+					'value' => $buisness['name'],
+					'attr'  => [
 						'required',
 						'min' => 5,
 						'max' => 15,
@@ -330,7 +333,7 @@ class WPRetail_Settings {
 					'type'  => 'datepicker',
 					'name'  => 'start_date',
 					'id'    => 'start_date',
-					'value' => '04/04/2021',
+					'value' => $buisness['start_date'],
 				],
 				'icon'             => 'fa-solid fa-calendar',
 				'icon_after_input' => true,
@@ -342,9 +345,10 @@ class WPRetail_Settings {
 					'content' => __( 'Default Profit Percent', 'wpretail' ) . '*',
 				],
 				'input'       => [
-					'type' => 'text',
-					'name' => 'profit_percent',
-					'id'   => 'profit_percent',
+					'type'  => 'text',
+					'name'  => 'profit_percent',
+					'id'    => 'profit_percent',
+					'value' => $buisness['default_profit_percent'],
 				],
 				'icon'        => 'fa-solid fa-circle-plus',
 				'col'         => 'col-md-4',
@@ -360,6 +364,7 @@ class WPRetail_Settings {
 					'id'      => 'currency',
 					'options' => $currencies,
 					'has_key' => true,
+					'value'   => $buisness['currency_id'],
 				],
 				'icon'        => 'fa-solid fa-dollar-sign',
 				'col'         => 'col-md-4',
@@ -404,6 +409,7 @@ class WPRetail_Settings {
 					'type'    => 'select',
 					'name'    => 'financial_month_start',
 					'id'      => 'financial_month_start',
+					'value'   => $buisness['fiscal_year_start_month'],
 					'options' => [
 						'1'  => __( 'January', 'wpretail' ),
 						'2'  => __( 'February', 'wpretail' ),
@@ -433,6 +439,7 @@ class WPRetail_Settings {
 					'type'    => 'select',
 					'name'    => 'stock_accounting_method',
 					'id'      => 'stock_accounting_method',
+					'value'   => $buisness['accounting_method'],
 					'options' => [
 						'fifo' => __( 'FIFO (First In First Out)', 'wpretail' ),
 						'lifo' => __( 'LIFO (First In Last Out)', 'wpretail' ),
@@ -449,9 +456,10 @@ class WPRetail_Settings {
 					'content' => __( 'Default Sales Discount', 'wpretail' ),
 				],
 				'input'       => [
-					'type' => 'text',
-					'name' => 'default_sales_discount',
-					'id'   => 'default_sales_discount',
+					'type'  => 'text',
+					'name'  => 'default_sales_discount',
+					'id'    => 'default_sales_discount',
+					'value' => $buisness['default_sale_discount'],
 				],
 				'icon'        => 'fa-solid fa-pen-to-square',
 				'col'         => 'col-md-4',
@@ -463,9 +471,10 @@ class WPRetail_Settings {
 					'content' => __( 'Trancaction Edit Days', 'wpretail' ) . '*',
 				],
 				'input'       => [
-					'type' => 'text',
-					'name' => 'transaction_edit_days',
-					'id'   => 'transaction_edit_days',
+					'type'  => 'text',
+					'name'  => 'transaction_edit_days',
+					'id'    => 'transaction_edit_days',
+					'value' => 30,
 				],
 				'icon'        => 'fa-solid fa-pen-to-square',
 				'col'         => 'col-md-4',
@@ -537,15 +546,16 @@ class WPRetail_Settings {
 				'col'   => 'col-md-6',
 			],
 			'city'                => [
-				'label' => [
+				'label'       => [
 					'content' => __( 'City', 'wpretail' ) . '*',
 				],
-				'input' => [
+				'input'       => [
 					'type' => 'text',
 					'name' => 'city',
 					'id'   => 'city',
 				],
-				'col'   => 'col-md-6',
+				'col'         => 'col-md-6',
+				'validations' => [ 'required' ],
 			],
 			'zipcode'             => [
 				'label' => [

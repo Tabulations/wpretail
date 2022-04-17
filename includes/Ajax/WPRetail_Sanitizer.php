@@ -98,6 +98,7 @@ abstract class WPRetail_Sanitizer {
 			$form_fields = $all_fields[ $this->handle ];
 			foreach ( $form_fields as $field ) {
 				if ( empty( $field['input'] ) || empty( $field['input']['type'] ) || empty( $field['input']['name'] ) ) {
+					$this->validate( '', $field );
 					continue;
 				}
 				$field_name                            = $field['input']['name'];

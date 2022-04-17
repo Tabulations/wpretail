@@ -18,25 +18,16 @@ jQuery( function ( $ ) {
 				btn.on( 'click', function ( e ) {
 					e.preventDefault();
 
+					$( document.body ).append(
+						'<div class="modal-backdrop wpretail-backdrop fade show"></div>'
+					);
+
 					formTuple.find( '.wpretail-success-message' ).remove();
 					formTuple.find( '.wpretail-error-message' ).remove();
 
-					var formErrors = formTuple.find(
-						'.invalid-feedback:visible'
-					);
-
-					if ( formErrors.length > 0 ) {
-						$( [
-							document.documentElement,
-							document.body,
-						] ).animate(
-							{
-								scrollTop: formErrors.last().offset().top,
-							},
-							800
-						);
-						return;
-					}
+					formTuple
+						.find( '.invalid-feedback' )
+						.css( 'display', 'none' );
 
 					var formId = formTuple.attr( 'id' ),
 						data = formTuple.serializeArray();
@@ -49,10 +40,6 @@ jQuery( function ( $ ) {
 							? formTuple.data( 'process-text' )
 							: 'Processing'
 					);
-
-					formTuple
-						.find( '.invalid-feedback' )
-						.css( 'display', 'none' );
 
 					// Add action intend for ajax_form_submission endpoint.
 					data.push( {
@@ -84,7 +71,10 @@ jQuery( function ( $ ) {
 										'wpretail_',
 										'wpretail_list_'
 									);
-									if ( $( document ).has( '#' + listId ) ) {
+
+									if (
+										$( document ).has( '#' + listId ).length
+									) {
 										if (
 											undefined !==
 											xhr.data.success.updated
@@ -136,7 +126,18 @@ jQuery( function ( $ ) {
 														)
 													);
 												}
-												lastRow.find( 'td' ).html( '' );
+												lastRow
+													.find(
+														'td:not(:last-child)'
+													)
+													.html( '' );
+												lastRow
+													.find( 'td:last' )
+													.find( 'button' )
+													.attr(
+														'data-id',
+														xhr.data.success.id
+													);
 												$( document )
 													.has( '#' + listId )
 													.find( 'th' )
@@ -167,6 +168,10 @@ jQuery( function ( $ ) {
 										}
 									}
 
+									$( document )
+										.find( '.wpretail-modal' )
+										.modal( 'hide' );
+
 									$.alert( {
 										title: '',
 										type: 'green',
@@ -183,9 +188,6 @@ jQuery( function ( $ ) {
 										},
 									} );
 								}
-								$( document )
-									.find( '.wpretail-modal' )
-									.modal( 'toggle' );
 							} else {
 								var err = JSON.parse(
 									errorThrown.responseText
@@ -210,14 +212,9 @@ jQuery( function ( $ ) {
 								}
 								$.each( errors, function ( index, value ) {
 									var output = '<ul class="wpretail-errors">';
-									if ( false === $.isEmptyObject( value ) ) {
-										$.each( value, function (
-											vindex,
-											vvaluue
-										) {
-											output +=
-												'<li>' + vvaluue + '</li>';
-										} );
+									for ( var vvalue in value ) {
+										output +=
+											'<li>' + value[ vvalue ] + '</li>';
 									}
 									output += '</ul>';
 									formTuple
@@ -234,6 +231,10 @@ jQuery( function ( $ ) {
 							formTuple.trigger( 'focusout' ).trigger( 'change' );
 						} )
 						.always( function ( xhr ) {
+							$( document )
+								.find( '.modal-backdrop.wpretail-backdrop' )
+								.remove();
+
 							var redirectUrl =
 								xhr.data && xhr.data.redirect_url
 									? xhr.data.redirect_url

@@ -79,7 +79,7 @@ class WPRetail_Db {
 	 */
 	public function get_business( $id = null ) {
 		if ( ! empty( $id ) ) {
-			$business = $this->db->get_results(
+			$business = $this->db->get_row(
 				$this->db->prepare(
 					"SELECT * FROM {$this->db->prefix}wpretail_business WHERE `id` = %s",
 					$id
