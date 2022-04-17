@@ -110,9 +110,11 @@ jQuery( function ( $ ) {
 													} );
 											}
 										} else {
-											var lastRow = $( document ).find(
-												'#' + listId + ' tr:last'
-											);
+											var lastRow = $( document )
+												.find(
+													'#' + listId + ' tr:last'
+												)
+												.clone();
 											if ( undefined !== lastRow ) {
 												if ( lastRow.has( 'th' ) ) {
 													lastRow.html(
@@ -128,7 +130,7 @@ jQuery( function ( $ ) {
 												}
 												lastRow
 													.find(
-														'td:not(:last-child)'
+														'td:not(:last-child),th'
 													)
 													.html( '' );
 												lastRow
@@ -357,7 +359,7 @@ jQuery( function ( $ ) {
 								} );
 						},
 						cancel: {
-							function() {
+							action: function () {
 								$( document )
 									.find( '.modal-backdrop.wpretail-backdrop' )
 									.remove();
