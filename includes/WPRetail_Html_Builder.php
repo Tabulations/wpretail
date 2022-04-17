@@ -482,40 +482,42 @@ class WPRetail_Html_Builder {
 	 */
 	public static function table( $args ) {
 		self::html( 'table', $args );
-		if ( ! empty( $args['head'] ) ) {
-			self::html( 'thead', [ 'class' => [ 'wpretail-table-head' ] ] );
-			self::html( 'tr', [ 'class' => [ 'wpretail-table-row' ] ] );
-			foreach ( $args['head'] as $th ) {
-				self::html(
-					'th',
+		if ( empty( $args['head']['labels'] ) ) {
+			return;
+		}
+		self::html( 'thead', [ 'class' => [ 'wpretail-table-head' ] ] );
+		self::html( 'tr', [ 'class' => [ 'wpretail-table-row' ] ] );
+		foreach ( $args['head']['labels'] as $th_key => $th ) {
+			self::html(
+				'th',
+				array_merge(
 					[
 						'class'   => [ 'wpretail-table-th' ],
 						'content' => $th,
 						'closed'  => true,
-					]
-				);
-			}
-			if ( ! empty( $args['actions']['options'] ) ) {
-				self::html(
-					'th',
-					[
-						'class'   => [ 'wpretail-table-th' ],
-						'content' => ! empty( $args['actions']['title'] ) ? $args['actions']['title'] : '',
-						'closed'  => true,
-					]
-				);
-			}
-			self::html( 'tr' );
-			self::html( 'thead' );
-		} else {
-			return;
+					],
+					! empty( $args['head']['data'][ $th_key ] ) ? [ 'data' => [ 'target' => $args['head']['data'][ $th_key ] ] ] : []
+				)
+			);
 		}
+		if ( ! empty( $args['actions']['options'] ) ) {
+			self::html(
+				'th',
+				[
+					'class'   => [ 'wpretail-table-th' ],
+					'content' => ! empty( $args['actions']['title'] ) ? $args['actions']['title'] : '',
+					'closed'  => true,
+				]
+			);
+		}
+		self::html( 'tr' );
+		self::html( 'thead' );
 		if ( ! empty( $args['body'] ) ) {
 			self::html( 'tbody', [ 'class' => [ 'wpretail-table-bpdy' ] ] );
 			foreach ( $args['body'] as $tr ) {
 				self::html( 'tr', [ 'class' => [ 'wpretail-table-row' ] ] );
 				$tr = (array) $tr;
-				foreach ( array_keys( $args['head'] ) as $td ) {
+				foreach ( array_keys( $args['head']['labels'] ) as $td ) {
 					self::html(
 						'td',
 						[
@@ -530,6 +532,7 @@ class WPRetail_Html_Builder {
 						'td',
 						[
 							'class' => [ 'wpretail-table-data' ],
+							'attr'  => [ 'style' => 'min-width:80px;' ],
 						]
 					);
 					foreach ( $args['actions']['options'] as $action ) {
@@ -538,7 +541,7 @@ class WPRetail_Html_Builder {
 								self::html(
 									'button',
 									[
-										'class' => [ 'btn btn-primary wpretail-table-edit ml-5' ],
+										'class' => [ 'btn btn-primary wpretail-table-edit ml-5 btn-sm' ],
 										'data'  => [
 											'id'      => $tr['id'],
 											'confirm' => ! empty( $args['actions']['update_confirm'] ) ? $args['actions']['update_confirm'] : '',
@@ -560,7 +563,7 @@ class WPRetail_Html_Builder {
 								self::html(
 									'button',
 									[
-										'class' => [ 'btn btn-danger wpretail-table-delete ml-5' ],
+										'class' => [ 'btn btn-danger wpretail-table-delete ml-5 btn-sm' ],
 										'data'  => [
 											'id'      => $tr['id'],
 											'confirm' => ! empty( $args['actions']['delete_confirm'] ) ? $args['actions']['delete_confirm'] : '',
@@ -643,17 +646,15 @@ class WPRetail_Html_Builder {
 		}
 		self::html( 'div' );
 		self::html( 'div' );
-		if ( empty( $form_args['is_modal'] ) || true !== $form_args['is_modal'] ) {
-			self::html(
-				'button',
-				[
-					'attr'    => [ 'type' => 'submit' ],
-					'class'   => [ 'btn btn-primary wpretail-submit ' . esc_attr( $form_args['form_submit_id'] ) ],
-					'content' => $form_args['form_submit_label'],
-					'closed'  => true,
-				]
-			);
-		}
+		self::html(
+			'button',
+			[
+				'attr'    => [ 'type' => 'submit' ],
+				'class'   => [ 'btn btn-primary wpretail-submit ' . esc_attr( $form_args['form_submit_id'] ) ],
+				'content' => $form_args['form_submit_label'],
+				'closed'  => true,
+			]
+		);
 		self::html( 'form' );
 		self::form_modal( $form_args, true );
 	}
@@ -669,16 +670,12 @@ class WPRetail_Html_Builder {
 		if ( ! empty( $form_args['is_modal'] ) && true === $form_args['is_modal'] ) {
 			if ( $is_colosed ) {
 				echo '</div>';
-				echo '<div class="modal-footer">';
-				echo '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>';
-				echo '<button type="button" class="btn btn-primary wpretail-submit ' . esc_attr( $form_args['form_submit_id'] ) . '">' . wp_kses_post( $form_args['form_submit_label'] ) . '</button>';
-				echo '</div>';
 				echo '</div>';
 				echo '</div>';
 				echo '</div>';
 				return;
 			}
-			echo '<div class="wpretail-modal modal fade" id="' . esc_attr( $form_args['id'] ) . '" tabindex="-1" aria-labelledby="' . esc_attr( $form_args['id'] ) . 'Label" aria-hidden="true">';
+			echo '<div class="wpretail-modal modal fade" id="' . esc_attr( $form_args['id'] . '_modal' ) . '" tabindex="-1" aria-labelledby="' . esc_attr( $form_args['id'] ) . 'Label" aria-hidden="true">';
 			echo '<div class="modal-dialog ' . esc_attr( $form_args['modal'] ) . '">';
 			echo '<div class="modal-content">';
 			echo '<div class="modal-header">';

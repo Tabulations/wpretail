@@ -92,4 +92,35 @@ class WPRetail_Db {
 		}
 		return (array) $business;
 	}
+
+	/**
+	 * Get location.
+	 *
+	 * @param mixed $id ID.
+	 * @return mixed $businesss Business.
+	 */
+	public function get_location( $id = null ) {
+		if ( ! empty( $id ) ) {
+			$business = $this->db->get_row(
+				$this->db->prepare(
+					"SELECT * FROM {$this->db->prefix}wpretail_business_location WHERE `id` = %s",
+					$id
+				)
+			);
+		} else {
+			$business = $this->db->get_results(
+				"SELECT * FROM {$this->db->prefix}wpretail_business_location WHERE status = TRUE"
+			);
+		}
+		return (array) $business;
+	}
+
+	/**
+	 * Get last insert ID.
+	 *
+	 * @return int ID
+	 */
+	public function get_last_insert_id() {
+		return $this->db->insert_id;
+	}
 }

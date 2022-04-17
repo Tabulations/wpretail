@@ -68,6 +68,11 @@ abstract class WPRetail_Sanitizer {
 	public function sanitized_data() {
 
 		if ( isset( $_POST['wpretail_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['wpretail_nonce'] ) ), 'wpretail_nonce' ) ) {
+
+			if ( isset( $_POST['id'] ) ) {
+				$this->event['id'] = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '';
+			}
+
 			$this->target = isset( $_POST['form_id'] ) ? sanitize_text_field( wp_unslash( $_POST['form_id'] ) ) : '';
 
 			if ( empty( $this->target ) ) {
@@ -78,7 +83,6 @@ abstract class WPRetail_Sanitizer {
 			// Detecting Delete Action.
 			if ( preg_match( '/wpretail_list/', $this->target ) ) {
 				$this->event['action'] = isset( $_POST['event'] ) ? sanitize_text_field( wp_unslash( $_POST['event'] ) ) : '';
-				$this->event['id']     = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '';
 				return;
 			}
 

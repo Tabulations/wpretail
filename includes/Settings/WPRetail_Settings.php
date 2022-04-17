@@ -38,6 +38,9 @@ class WPRetail_Settings {
 		// DB Handler.
 		add_action( 'wpretail_business_settings_handler', [ $this, 'business_setting_handler' ] );
 		add_action( 'wpretail_list_busiless_setting_handler', [ $this, 'list_business_setting_handler' ] );
+		add_action( 'wpretail_location_setting_handler', [ $this, 'location_setting_handler' ] );
+		add_action( 'wpretail_list_location_setting_handler', [ $this, 'list_location_setting_handler' ] );
+
 	}
 
 	/**
@@ -108,6 +111,140 @@ class WPRetail_Settings {
 			}
 		} else {
 			$ajax->errors['message'] = __( 'Event not found, Please try again', 'wpretail' );
+		}
+	}
+
+		/**
+		 * List Business Setting Handler.
+		 *
+		 * @param mixed $ajax Ajax Object.
+		 * @return void
+		 */
+	public function list_location_setting_handler( $ajax ) {
+		if ( ! empty( $ajax->event ) ) {
+			if ( ! empty( $ajax->event['action'] ) ) {
+				switch ( $ajax->event['action'] ) {
+					case 'delete':
+						if ( ! empty( $ajax->event['id'] ) ) {
+							$db    = new WPRetail\Db\WPRetail_Db( 'wpretail_business_location' );
+							$where = [ 'id' => $ajax->event['id'] ]; // Business ID is always 1.
+							try {
+								$id = $db->update( [ 'status' => false ], $where );
+								if ( $id ) {
+									$ajax->success['message'] = __( 'Location removed successsfully', 'wpretail' );
+								} else {
+									$ajax->errors['message'] = __( 'Location could not be removed, Please repload the page and try again', 'wpretail' );
+								}
+							} catch ( \Exception $e ) {
+								$ajax->errors['message'] = $e->getMessage();
+							}
+						} else {
+							$ajax->errors['message'] = __( 'Id not found, please reload the page and try again', 'wpretail' );
+						}
+						break;
+					case 'edit':
+						if ( ! empty( $ajax->event['id'] ) ) {
+							$db = new WPRetail\Db\WPRetail_Db( 'wpretail_business_location' );
+							try {
+								$location                  = $db->get_location( $ajax->event['id'] );
+								$fields                    = [
+									'business_id'         => '1', // Always.
+									'location_id'         => $location['location_id'],
+									'landmark'            => $location['landmark'],
+									'country'             => $location['country'],
+									'state'               => $location['state'],
+									'city'                => $location['city'],
+									'zipcode'             => $location['zip_code'],
+									'mobile'              => $location['mobile'],
+									'alt_mobile'          => $location['alternate_number'],
+									'email'               => $location['email'],
+									'website'             => $location['website'],
+									'invoice_scheme'      => $location['invoice_scheme'],
+									'invoice_layout_pos'  => $location['invoice_layout_pos'],
+									'invoice_layout_sale' => $location['invoice_layout_sale'],
+									'selling_price_group' => $location['selling_price_group'],
+								];
+								$ajax->success['message']  = __( 'Update Location', 'wpretail' );
+								$ajax->success['location'] = $fields;
+							} catch ( \Exception $e ) {
+								$ajax->errors['message'] = $e->getMessage();
+							}
+						}
+						break;
+					default:
+						$ajax->errors['message'] = __( 'Object not found, Please try again', 'wpretail' );
+				}
+			} else {
+				$ajax->errors['message'] = __( 'Event not found, Please try again', 'wpretail' );
+			}
+		}
+	}
+
+	/**
+	 * Business setting handler.
+	 *
+	 * @param mixed $ajax Ajax.
+	 * @return void
+	 */
+	public function location_setting_handler( $ajax ) {
+		$fields = [
+			'business_id'         => '1', // Always.
+			'status'              => '1', // Always.
+			'location_id'         => $ajax->sanitized_fields['location_id'],
+			'landmark'            => $ajax->sanitized_fields['landmark'],
+			'country'             => $ajax->sanitized_fields['country'],
+			'state'               => $ajax->sanitized_fields['state'],
+			'city'                => $ajax->sanitized_fields['city'],
+			'zip_code'            => $ajax->sanitized_fields['zipcode'],
+			'mobile'              => $ajax->sanitized_fields['mobile'],
+			'alternate_number'    => $ajax->sanitized_fields['alt_mobile'],
+			'email'               => $ajax->sanitized_fields['email'],
+			'website'             => $ajax->sanitized_fields['website'],
+			'invoice_scheme'      => $ajax->sanitized_fields['invoice_scheme'],
+			'invoice_layout_pos'  => $ajax->sanitized_fields['invoice_layout_pos'],
+			'invoice_layout_sale' => $ajax->sanitized_fields['invoice_layout_sale'],
+			'selling_price_group' => $ajax->sanitized_fields['selling_price_group'],
+		];
+
+		$db = new WPRetail\Db\WPRetail_Db( 'wpretail_business_location' );
+
+		try {
+			if ( ! empty( $ajax->event['id'] ) ) {
+				$where = [ 'id' => $ajax->event['id'] ];
+				$id    = $db->update( $fields, $where );
+				if ( $id ) {
+					$ajax->success['message'] = __( 'Location updated successfully', 'wpretail' );
+					$ajax->success['id']      = $ajax->event['id'];
+					$formatted_fields         = [
+						'business_id'      => '1', // Always.
+						'status'           => '1', // Always.
+						'location_id'      => $fields['location_id'],
+						'landmark'         => $fields['landmark'],
+						'country'          => $fields['country'],
+						'state'            => $fields['state'],
+						'city'             => $fields['city'],
+						'zipcode'          => $fields['zip_code'],
+						'mobile'           => $fields['mobile'],
+						'alternate_number' => $fields['alt_mobile'],
+						'email'            => $fields['email'],
+						'website'          => $fields['website'],
+					];
+					$ajax->success['updated'] = $formatted_fields;
+				} else {
+					$ajax->errors['message'] = __( 'Location Could not be updated', 'wpretail' );
+				}
+				return;
+			}
+			$id = $db->insert( $fields );
+			if ( $id ) {
+				$ajax->success['message']  = __( 'Location added successfully', 'wpretail' );
+				$ajax->success['id']       = $db->get_last_insert_id();
+				$ajax->success['inserted'] = $fields;
+			} else {
+				$ajax->errors['message'] = __( 'Location Could not be added', 'wpretail' );
+			}
+		} catch ( Exception $e ) {
+			$ajax->errors['message'] = $e->getMessage();
 		}
 	}
 
@@ -554,8 +691,8 @@ class WPRetail_Settings {
 			array_merge(
 				$field_options,
 				[
-					'business_settings'         => $business_settings,
-					'business_location_setting' => $location_settings,
+					'business_settings' => $business_settings,
+					'location_setting'  => $location_settings,
 				]
 			)
 		);
@@ -598,7 +735,7 @@ class WPRetail_Settings {
 	public function view_location_setting() {
 		$field_options = apply_filters( 'wpretail_form_fields_options', [] );
 
-		$settings = $field_options['business_location_setting'];
+		$settings = $field_options['location_setting'];
 		wpretail()->builder->html(
 			'button',
 			[
@@ -609,7 +746,7 @@ class WPRetail_Settings {
 				'attr'    => [ 'type' => 'button' ],
 				'data'    => [
 					'bs-toggle' => 'modal',
-					'bs-target' => '#wpretail-location-setting',
+					'bs-target' => '#wpretail_location_setting_modal',
 				],
 			]
 		);
@@ -619,11 +756,26 @@ class WPRetail_Settings {
 		wpretail()->builder->table(
 			[
 				'head'    => [
-					'name'         => __( 'Name', 'wpretail' ),
-					'currency_id'  => __( 'Currency', 'wpretail' ),
-					'start_date'   => __( 'Start Date', 'wpretail' ),
-					'tax_number_1' => __( 'Tax Number', 'wpretail' ),
-					'tax_label_1'  => __( 'Tax Label', 'wpretail' ),
+					'labels' => [
+						'location_id' => __( 'Location ID', 'wpretail' ),
+						'landmark'    => __( 'Landmark', 'wpretail' ),
+						'city'        => __( 'City', 'wpretail' ),
+						'state'       => __( 'State', 'wpretail' ),
+						'country'     => __( 'Country', 'wpretail' ),
+						'zip_code'    => __( 'Zip Code', 'wpretail' ),
+						'mobile'      => __( 'Mobile', 'wpretail' ),
+						'email'       => __( 'Email', 'wpretail' ),
+					],
+					'data'   => [
+						'location_id' => 'location_id',
+						'landmark'    => 'landmark',
+						'city'        => 'city',
+						'state'       => 'state',
+						'country'     => 'country',
+						'zip_code'    => 'zipcode',
+						'mobile'      => 'mobile',
+						'email'       => 'email',
+					],
 				],
 				'actions' => [
 					'options'        => [
@@ -633,30 +785,29 @@ class WPRetail_Settings {
 					'delete_confirm' => __( 'Are you sure you want to remove?', 'wpretail' ),
 					'update_confirm' => __( 'Are you sure you want to update?', 'wpretail' ),
 				],
-				'id'      => 'wpretail_list_busiless_setting',
-				'body'    => $db->get_business(),
+				'id'      => 'wpretail_list_location_setting',
+				'body'    => $db->get_location(),
 				'class'   => [ 'wpretail-datatable', 'table table-primary mt-5' ],
 				'col'     => 'col-md-12',
-
 			]
 		);
 
-			$args = [
-				'form_args'  => [
-					'id'                => 'wpretail-location-setting',
-					'class'             => [ 'wpretail-location-setting card' ],
-					'attr'              => [
-						'action' => admin_url(),
-						'method' => 'post',
-					],
-					'form_title'        => __( 'Add Business Location', 'wpretail' ),
-					'form_submit_id'    => 'wpretail_add_location',
-					'form_submit_label' => __( 'Add Location', 'wpretail' ),
-					'is_modal'          => true,
-					'modal'             => 'modal-lg modal-dialog-centered modal-dialog-scrollable',
+		$args = [
+			'form_args'  => [
+				'id'                => 'wpretail_location_setting',
+				'class'             => [ 'wpretail-location-setting' ],
+				'attr'              => [
+					'action' => admin_url(),
+					'method' => 'post',
 				],
-				'input_args' => $settings,
-			];
+				'form_title'        => __( 'Add Business Location', 'wpretail' ),
+				'form_submit_id'    => 'wpretail_add_location',
+				'form_submit_label' => __( 'Add Location', 'wpretail' ),
+				'is_modal'          => true,
+				'modal'             => 'modal-lg modal-dialog-centered modal-dialog-scrollable',
+			],
+			'input_args' => $settings,
+		];
 
 			wpretail()->builder->form( $args );
 	}
