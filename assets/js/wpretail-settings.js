@@ -447,6 +447,23 @@ jQuery( function ( $ ) {
 													);
 												}
 												break;
+											case 'checkbox':
+												if (
+													Object.keys(
+														location
+													).includes( name )
+												) {
+													if (
+														location[ name ] ===
+														$input.val()
+													) {
+														$input.prop(
+															'checked',
+															true
+														);
+													}
+												}
+												break;
 											case 'select':
 												if (
 													Object.keys(
