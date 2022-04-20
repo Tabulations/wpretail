@@ -34,12 +34,24 @@ class WPRetail_Settings {
 		// UI.
 		add_action( 'wpretail_view_business_setting', [ $this, 'view_business_setting' ] );
 		add_action( 'wpretail_view_location_setting', [ $this, 'view_location_setting' ] );
+		add_action( 'wpretail_view_tax_setting', [ $this, 'view_tax_setting' ] );
 
 		// DB Handler.
+		// Business.
 		add_action( 'wpretail_business_settings_handler', [ $this, 'business_setting_handler' ] );
 		add_action( 'wpretail_list_busiless_setting_handler', [ $this, 'list_business_setting_handler' ] );
+
+		// Locations.
 		add_action( 'wpretail_location_setting_handler', [ $this, 'location_setting_handler' ] );
 		add_action( 'wpretail_list_location_setting_handler', [ $this, 'list_location_setting_handler' ] );
+
+		// Tax Rates.
+		add_action( 'wpretail_tax_rate_setting_handler', [ $this, 'tax_rate_setting_handler' ] );
+		add_action( 'wpretail_list_tax_rate_setting_handler', [ $this, 'list_tax_rate_setting_handler' ] );
+
+		// Tax Groups.
+		add_action( 'wpretail_tax_group_setting_handler', [ $this, 'tax_group_setting_handler' ] );
+		add_action( 'wpretail_list_tax_group_setting_handler', [ $this, 'list_tax_group_setting_handler' ] );
 
 	}
 
@@ -114,12 +126,12 @@ class WPRetail_Settings {
 		}
 	}
 
-		/**
-		 * List Business Setting Handler.
-		 *
-		 * @param mixed $ajax Ajax Object.
-		 * @return void
-		 */
+	/**
+	 * List Business Setting Handler.
+	 *
+	 * @param mixed $ajax Ajax Object.
+	 * @return void
+	 */
 	public function list_location_setting_handler( $ajax ) {
 		if ( ! empty( $ajax->event ) ) {
 			if ( ! empty( $ajax->event['action'] ) ) {
@@ -242,6 +254,207 @@ class WPRetail_Settings {
 				$ajax->success['inserted'] = $fields;
 			} else {
 				$ajax->errors['message'] = __( 'Location Could not be added', 'wpretail' );
+			}
+		} catch ( Exception $e ) {
+			$ajax->errors['message'] = $e->getMessage();
+		}
+	}
+
+	/**
+	 * List Tax Rate Setting Handler.
+	 *
+	 * @param mixed $ajax Ajax Object.
+	 * @return void
+	 */
+	public function list_tax_rate_setting_handler( $ajax ) {
+		if ( ! empty( $ajax->event ) ) {
+			if ( ! empty( $ajax->event['action'] ) ) {
+				switch ( $ajax->event['action'] ) {
+					case 'delete':
+						if ( ! empty( $ajax->event['id'] ) ) {
+							$db    = new WPRetail\Db\WPRetail_Db( 'wpretail_tax_rates' );
+							$where = [ 'id' => $ajax->event['id'] ]; // Business ID is always 1.
+							try {
+								$id = $db->update( [ 'status' => false ], $where );
+								if ( $id ) {
+									$ajax->success['message'] = __( 'Tax removed successsfully', 'wpretail' );
+								} else {
+									$ajax->errors['message'] = __( 'Tax could not be removed, Please repload the page and try again', 'wpretail' );
+								}
+							} catch ( \Exception $e ) {
+								$ajax->errors['message'] = $e->getMessage();
+							}
+						} else {
+							$ajax->errors['message'] = __( 'Id not found, please reload the page and try again', 'wpretail' );
+						}
+						break;
+					case 'edit':
+						if ( ! empty( $ajax->event['id'] ) ) {
+							$db = new WPRetail\Db\WPRetail_Db( 'wpretail_tax_rates' );
+							try {
+								$tax                       = $db->get_tax_rates( $ajax->event['id'] );
+								$fields                    = [
+									'tax_name'  => $tax['name'],
+									'tax_rate'  => $tax['rate'],
+									'for_group' => $tax['for_group'],
+								];
+								$ajax->success['message']  = __( 'Update Tax', 'wpretail' );
+								$ajax->success['location'] = $fields;
+							} catch ( \Exception $e ) {
+								$ajax->errors['message'] = $e->getMessage();
+							}
+						}
+						break;
+					default:
+						$ajax->errors['message'] = __( 'Object not found, Please try again', 'wpretail' );
+				}
+			} else {
+				$ajax->errors['message'] = __( 'Event not found, Please try again', 'wpretail' );
+			}
+		}
+	}
+
+	/**
+	 * List Tax Rate Setting Handler.
+	 *
+	 * @param mixed $ajax Ajax Object.
+	 * @return void
+	 */
+	public function list_tax_group_setting_handler( $ajax ) {
+		if ( ! empty( $ajax->event ) ) {
+			if ( ! empty( $ajax->event['action'] ) ) {
+				switch ( $ajax->event['action'] ) {
+					case 'delete':
+						if ( ! empty( $ajax->event['id'] ) ) {
+							$db    = new WPRetail\Db\WPRetail_Db( 'wpretail_tax_groups' );
+							$where = [ 'id' => $ajax->event['id'] ]; // Business ID is always 1.
+							try {
+								$id = $db->update( [ 'status' => false ], $where );
+								if ( $id ) {
+									$ajax->success['message'] = __( 'Tax Group removed successsfully', 'wpretail' );
+								} else {
+									$ajax->errors['message'] = __( 'Tax Group could not be removed, Please repload the page and try again', 'wpretail' );
+								}
+							} catch ( \Exception $e ) {
+								$ajax->errors['message'] = $e->getMessage();
+							}
+						} else {
+							$ajax->errors['message'] = __( 'Id not found, please reload the page and try again', 'wpretail' );
+						}
+						break;
+					case 'edit':
+						if ( ! empty( $ajax->event['id'] ) ) {
+							$db = new WPRetail\Db\WPRetail_Db( 'wpretail_tax_groupss' );
+							try {
+								$tax                       = $db->get_tax_groups( $ajax->event['id'] );
+								$fields                    = [
+									'group_name' => $tax['name'],
+									'sub_taxes' => wpretail()->helper->unserialize($tax['taxes']),
+								];
+								$ajax->success['message']  = __( 'Update Group', 'wpretail' );
+								$ajax->success['location'] = $fields;
+							} catch ( \Exception $e ) {
+								$ajax->errors['message'] = $e->getMessage();
+							}
+						}
+						break;
+					default:
+						$ajax->errors['message'] = __( 'Object not found, Please try again', 'wpretail' );
+				}
+			} else {
+				$ajax->errors['message'] = __( 'Event not found, Please try again', 'wpretail' );
+			}
+		}
+	}
+
+	/**
+	 * Tax setting handler.
+	 *
+	 * @param mixed $ajax Ajax.
+	 * @return void
+	 */
+	public function tax_rate_setting_handler( $ajax ) {
+		$fields = [
+			'business_id' => '1', // Always.
+			'status'      => '1', // Always.
+			'name'        => $ajax->sanitized_fields['tax_name'],
+			'rate'        => $ajax->sanitized_fields['tax_rate'],
+			'for_group'   => $ajax->sanitized_fields['for_group'],
+		];
+
+		$db = new WPRetail\Db\WPRetail_Db( 'wpretail_tax_rates' );
+
+		try {
+			if ( ! empty( $ajax->event['id'] ) ) {
+				$where = [ 'id' => $ajax->event['id'] ];
+				$id    = $db->update( $fields, $where );
+				if ( $id ) {
+					$ajax->success['message'] = __( 'Tax updated successfully', 'wpretail' );
+					$ajax->success['id']      = $ajax->event['id'];
+					$formatted_fields         = [
+						'tax_name'  => $fields['name'],
+						'tax_rate'  => $fields['rate'],
+						'for_group' => $fields['for_group'],
+					];
+					$ajax->success['updated'] = $formatted_fields;
+				} else {
+					$ajax->errors['message'] = __( 'Tax Could not be updated', 'wpretail' );
+				}
+				return;
+			}
+			$id = $db->insert( $fields );
+			if ( $id ) {
+				$ajax->success['message']  = __( 'Tax added successfully', 'wpretail' );
+				$ajax->success['id']       = $db->get_last_insert_id();
+				$ajax->success['inserted'] = $fields;
+			} else {
+				$ajax->errors['message'] = __( 'Tax Could not be added', 'wpretail' );
+			}
+		} catch ( Exception $e ) {
+			$ajax->errors['message'] = $e->getMessage();
+		}
+	}
+
+	/**
+	 * Tax setting handler.
+	 *
+	 * @param mixed $ajax Ajax.
+	 * @return void
+	 */
+	public function tax_group_setting_handler( $ajax ) {
+		$fields = [
+			'business_id' => '1', // Always.
+			'status'      => '1', // Always.
+			'name'        => $ajax->sanitized_fields['group_name'],
+			'taxes'       => wpretail()->helper->serialize( $ajax->sanitized_fields['sub_taxes'] ),
+		];
+
+		$db = new WPRetail\Db\WPRetail_Db( 'wpretail_tax_groups' );
+
+		try {
+			if ( ! empty( $ajax->event['id'] ) ) {
+				$where = [ 'id' => $ajax->event['id'] ];
+				$id    = $db->update( $fields, $where );
+				if ( $id ) {
+					$ajax->success['message'] = __( 'Tax Group updated successfully', 'wpretail' );
+					$ajax->success['id']      = $ajax->event['id'];
+					$formatted_fields         = [
+						'group_name' => $fields['name'],
+						'sub_taxes' => wpretail()->helper->unserialize( $fields['taxes'] ),
+					];
+					$ajax->success['updated'] = $formatted_fields;
+				} else {
+					$ajax->errors['message'] = __( 'Tax Group Could not be updated', 'wpretail' );
+				}
+				return;
+			}
+			$id = $db->insert( $fields );
+			if ( $id ) {
+				$ajax->success['message']  = __( 'Tax Group added successfully', 'wpretail' );
+				$ajax->success['id']       = $db->get_last_insert_id();
+				$ajax->success['inserted'] = $fields;
+			} else {
+				$ajax->errors['message'] = __( 'Tax Group Could not be added', 'wpretail' );
 			}
 		} catch ( Exception $e ) {
 			$ajax->errors['message'] = $e->getMessage();
@@ -696,6 +909,82 @@ class WPRetail_Settings {
 				'col'   => 'col-md-6',
 			],
 		];
+		$tax_rate_settings = [
+			'tax_name'  => [
+				'label' => [
+					'content' => __( 'Tax Name', 'wpretail' ) . '*',
+				],
+				'input' => [
+					'type' => 'text',
+					'name' => 'tax_name',
+					'id'   => 'tax_name',
+				],
+				'col'   => 'col-md-6',
+			],
+			'tax_rate'  => [
+				'label' => [
+					'content' => __( 'Tax Rate %', 'wpretail' ) . '*',
+				],
+				'input' => [
+					'type' => 'text',
+					'name' => 'tax_rate',
+					'id'   => 'tax_rate',
+				],
+				'col'   => 'col-md-6',
+			],
+			'for_group' => [
+				'input' => [
+					'type'    => 'checkbox',
+					'name'    => 'for_group',
+					'id'      => 'for_group',
+					'options' => [
+						'items' => [
+							'1' => __( 'For tax group only', 'wpretail' ),
+						],
+					],
+					'has_key' => true,
+				],
+				'col'   => 'col-md-6',
+			],
+		];
+
+		$db                  = new WPRetail\Db\WPRetail_Db( 'wpretail_tax_rates' );
+		$tax_rates           = $db->get_tax_rates();
+		$tax_rates_formatted = [];
+		if ( ! empty( $tax_rates ) ) {
+			foreach ( $tax_rates as $rate ) {
+				$tax_rates_formatted[ $rate->id ] = $rate->name;
+			}
+		}
+		$tax_group_settings = [
+			'group_name' => [
+				'label' => [
+					'content' => __( 'Group Name', 'wpretail' ) . '*',
+				],
+				'input' => [
+					'type' => 'text',
+					'name' => 'group_name',
+					'id'   => 'group_name',
+				],
+				'col'   => 'col-md-6',
+			],
+			'sub_taxes'  => [
+				'label' => [
+					'content' => __( 'Tax Rate %', 'wpretail' ) . '*',
+				],
+				'input' => [
+					'type'    => 'select',
+					'name'    => 'sub_taxes',
+					'id'      => 'sub_taxes',
+					'options' => $tax_rates_formatted,
+					'has_key' => true,
+					'attr'    => [
+						'multiple',
+					],
+				],
+				'col'   => 'col-md-6',
+			],
+		];
 
 		return array_filter(
 			array_merge(
@@ -703,6 +992,8 @@ class WPRetail_Settings {
 				[
 					'business_settings' => $business_settings,
 					'location_setting'  => $location_settings,
+					'tax_rate_setting'  => $tax_rate_settings,
+					'tax_group_setting' => $tax_group_settings,
 				]
 			)
 		);
@@ -713,25 +1004,133 @@ class WPRetail_Settings {
 	 *
 	 * @return void
 	 */
-	public function view_business_setting() {
+	public function view_tax_setting() {
 
 		$field_options = apply_filters( 'wpretail_form_fields_options', [] );
 
-		$settings = $field_options['business_settings'];
+		$tax_rate_setting  = $field_options['tax_rate_setting'];
+		$tax_group_setting = $field_options['tax_group_setting'];
+
+		wpretail()->builder->html(
+			'button',
+			[
+				'id'      => 'add_tax',
+				'content' => __( 'Add Tax', 'wpretail' ),
+				'class'   => [ 'mb-3 btn btn-primary' ],
+				'closed'  => true,
+				'attr'    => [ 'type' => 'button' ],
+				'data'    => [
+					'bs-toggle' => 'modal',
+					'bs-target' => '#wpretail_tax_rate_setting_modal',
+				],
+			]
+		);
+
+		$db = new WPRetail\Db\WPRetail_Db( 'wpretail_tax_rates' );
+
+		wpretail()->builder->table(
+			[
+				'head'    => [
+					'labels' => [
+						'name' => __( 'Name', 'wpretail' ),
+						'rate' => __( 'Tax Rate', 'wpretail' ),
+					],
+					'data'   => [
+						'name' => 'tax_name',
+						'rate' => 'tax_	rate',
+					],
+				],
+				'actions' => [
+					'options'        => [
+						'edit',
+						'delete',
+					],
+					'delete_confirm' => __( 'Are you sure you want to remove?', 'wpretail' ),
+					'update_confirm' => __( 'Are you sure you want to update?', 'wpretail' ),
+				],
+				'id'      => 'wpretail_list_tax_rate_setting',
+				'body'    => $db->get_tax_rates(),
+				'class'   => [ 'wpretail-datatable', 'table table-primary mt-5' ],
+				'col'     => 'col-md-12',
+			]
+		);
 
 		$args = [
 			'form_args'  => [
-				'id'                => 'wpretail_business_settings',
-				'class'             => [ 'wpretail-business-settings' ],
+				'id'                => 'wpretail_tax_rate_setting',
+				'class'             => [ 'wpretail-tax-rate-setting' ],
 				'attr'              => [
 					'action' => admin_url(),
 					'method' => 'post',
 				],
-				'form_title'        => __( 'Update Business Information', 'wpretail' ),
-				'form_submit_id'    => 'wpretail_update_business',
-				'form_submit_label' => __( 'Update Business', 'wpretail' ),
+				'form_title'        => __( 'Add Tax', 'wpretail' ),
+				'form_submit_id'    => 'wpretail_add_tax',
+				'form_submit_label' => __( 'Add Tax', 'wpretail' ),
+				'is_modal'          => true,
+				'modal'             => 'modal-lg modal-dialog-centered modal-dialog-scrollable',
 			],
-			'input_args' => $settings,
+			'input_args' => $tax_rate_setting,
+		];
+
+		wpretail()->builder->form( $args );
+
+		wpretail()->builder->html(
+			'button',
+			[
+				'id'      => 'add_tax_group',
+				'content' => __( 'Add Group', 'wpretail' ),
+				'class'   => [ 'mb-3 btn btn-primary' ],
+				'closed'  => true,
+				'attr'    => [ 'type' => 'button' ],
+				'data'    => [
+					'bs-toggle' => 'modal',
+					'bs-target' => '#wpretail_tax_group_setting_modal',
+				],
+			]
+		);
+
+		$db = new WPRetail\Db\WPRetail_Db( 'wpretail_tax_groups' );
+
+		wpretail()->builder->table(
+			[
+				'head'    => [
+					'labels' => [
+						'name' => __( 'Name', 'wpretail' ),
+					],
+					'data'   => [
+						'name' => 'group_name',
+					],
+				],
+				'actions' => [
+					'options'        => [
+						'edit',
+						'delete',
+					],
+					'delete_confirm' => __( 'Are you sure you want to remove?', 'wpretail' ),
+					'update_confirm' => __( 'Are you sure you want to update?', 'wpretail' ),
+				],
+				'id'      => 'wpretail_list_tax_group_setting',
+				'body'    => $db->get_tax_groups(),
+				'class'   => [ 'wpretail-datatable', 'table table-primary mt-5' ],
+				'col'     => 'col-md-12',
+			]
+		);
+
+		$args = [
+			'form_args'  => [
+				'id'                => 'wpretail_tax_group_setting',
+				'class'             => [ 'wpretail-tax-group-setting' ],
+				'attr'              => [
+					'action' => admin_url(),
+					'method' => 'post',
+				],
+				'form_title'        => __( 'Add Group', 'wpretail' ),
+				'form_submit_id'    => 'wpretail_add_tax',
+				'form_submit_label' => __( 'Add Group', 'wpretail' ),
+				'is_modal'          => true,
+				'modal'             => 'modal-lg modal-dialog-centered modal-dialog-scrollable',
+			],
+			'input_args' => $tax_group_setting,
 		];
 
 		wpretail()->builder->form( $args );
@@ -819,6 +1218,35 @@ class WPRetail_Settings {
 			'input_args' => $settings,
 		];
 
-			wpretail()->builder->form( $args );
+		wpretail()->builder->form( $args );
+	}
+
+	/**
+	 * Tax Settinh View.
+	 *
+	 * @return void
+	 */
+	public function view_business_setting() {
+
+		$field_options = apply_filters( 'wpretail_form_fields_options', [] );
+
+		$settings = $field_options['business_settings'];
+
+		$args = [
+			'form_args'  => [
+				'id'                => 'wpretail_business_settings',
+				'class'             => [ 'wpretail-business-settings' ],
+				'attr'              => [
+					'action' => admin_url(),
+					'method' => 'post',
+				],
+				'form_title'        => __( 'Update Business Information', 'wpretail' ),
+				'form_submit_id'    => 'wpretail_update_business',
+				'form_submit_label' => __( 'Update Business', 'wpretail' ),
+			],
+			'input_args' => $settings,
+		];
+
+		wpretail()->builder->form( $args );
 	}
 }

@@ -422,6 +422,7 @@ jQuery( function ( $ ) {
 										var $input = $( this );
 										var name = $input
 											.attr( 'name' )
+											.replace( '[]', '' )
 											.replace( /\]$/, '' )
 											.replace( /.*\[/, '' );
 										switch ( $input.attr( 'type' ) ) {

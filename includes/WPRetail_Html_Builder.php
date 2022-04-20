@@ -233,26 +233,28 @@ class WPRetail_Html_Builder {
 
 		// Open Div.
 		self::html( 'div', $container );
-		self::html( 'label', $label );
-		if ( ! empty( $args['tooltip'] ) ) {
-			self::html(
-				'span',
-				[
-					'class'   => [ 'wpretail-tooltip badge bg-primary' ],
-					'data'    => [
-						'bs-toggle'    => 'tooltip',
-						'bs-html'      => true,
-						'bs-placement' => 'right',
-					],
-					'attr'    => [
-						'title'       => $args['tooltip'],
-						'aria-hidden' => true,
-					],
-					'close'   => true,
-					'content' => '?',
-				]
-			);
-			self::html( 'label' );
+		if( ! empty( $label['content'] ) ) {
+			self::html( 'label', $label );
+			if ( ! empty( $args['tooltip'] ) ) {
+				self::html(
+					'span',
+					[
+						'class'   => [ 'wpretail-tooltip badge bg-primary' ],
+						'data'    => [
+							'bs-toggle'    => 'tooltip',
+							'bs-html'      => true,
+							'bs-placement' => 'right',
+						],
+						'attr'    => [
+							'title'       => $args['tooltip'],
+							'aria-hidden' => true,
+						],
+						'close'   => true,
+						'content' => '?',
+					]
+				);
+				self::html( 'label' );
+			}
 		}
 
 		if ( empty( $input['type'] ) ) {
@@ -307,6 +309,10 @@ class WPRetail_Html_Builder {
 				$input['attr']['name']  = $input['name'];
 				$input['attr']['value'] = $input['value'];
 				$input['attr']['type']  = $input['type'];
+
+				if( in_array( 'multiple', $input['attr'] ) ) {
+					$input['attr']['name'] = $input['attr']['name'].'[]';
+				}
 				unset( $input['type'] );
 				unset( $input['value'] );
 				unset( $input['closed'] );
@@ -387,7 +393,7 @@ class WPRetail_Html_Builder {
 								if ( ! empty( $input['value'] ) && $key === $input['value'] ) {
 									$input_args['attr']['checked'] = 'checked';
 								}
-								$label_args['content'] = $key;
+								$label_args['content'] = $option;
 							} else {
 								$input_args['attr']['value'] = $option;
 								if ( ! empty( $input['value'] ) && $option === $input['value'] ) {
@@ -531,7 +537,7 @@ class WPRetail_Html_Builder {
 					self::html(
 						'td',
 						[
-							'class' => [ 'wpretail-table-data' ],
+							'class' => [ 'wpretail-table-data text-right pr-5' ],
 							'attr'  => [ 'style' => 'min-width:80px;' ],
 						]
 					);
@@ -684,5 +690,15 @@ class WPRetail_Html_Builder {
 			echo '</div>';
 			echo '<div class="modal-body">';
 		}
+	}
+
+	/**
+	 * Section Title.
+	 *
+	 * @param mixed $title Title.
+	 * @return void
+	 */
+	public function section_title( $title ) {
+		self::html( 'h4', [ 'class' => [ 'wpretail-section-title' ], 'content' => $title, 'closed' => true ] );
 	}
 }

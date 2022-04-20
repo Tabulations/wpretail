@@ -102,11 +102,18 @@ abstract class WPRetail_Sanitizer {
 					continue;
 				}
 				$field_name                            = $field['input']['name'];
-				$this->sanitized_fields[ $field_name ] = '';
 				switch ( $field['input']['type'] ) {
+					case 'select':
+						if ( is_array( $_POST['wpretail'][ $this->target ][ $field_name ] ) ) {
+							foreach ( $_POST['wpretail'][ $this->target ][ $field_name ] as $selected ) {
+								$this->sanitized_fields[ $field_name ][] = sanitize_text_field( wp_unslash( $selected ) );
+							}
+							break;
+						}
+						$this->sanitized_fields[ $field_name ] = sanitize_text_field( wp_unslash( $_POST['wpretail'][ $this->target ][ $field_name ] ) );
+						break;
 					case 'text':
 					case 'number':
-					case 'select':
 					case 'checkbox':
 					case 'radio':
 					case 'datepicker':
@@ -119,6 +126,8 @@ abstract class WPRetail_Sanitizer {
 							$this->sanitized_fields[ $field_name ] = sanitize_textarea_field( wp_unslash( $_POST['wpretail'][ $this->target ][ $field_name ] ) );
 						}
 						break;
+					default:
+						$this->sanitized_fields[ $field_name ] = '';
 				}
 
 				$this->validate( $this->sanitized_fields[ $field_name ], $field );

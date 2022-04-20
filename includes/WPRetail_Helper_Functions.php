@@ -28,7 +28,7 @@ class WPRetail_Helper_Functions {
 	public static function wpretail_get_currencies() {
 		$currencies = [
 			'USD' => [
-				'name'                => esc_html__( 'U.S. Dollar', 'everest-forms-pro' ),
+				'name'                => esc_html__( 'U.S. Dollar', 'wpretail' ),
 				'symbol'              => '&#36;',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -36,7 +36,7 @@ class WPRetail_Helper_Functions {
 				'decimals'            => 2,
 			],
 			'GBP' => [
-				'name'                => esc_html__( 'Pound Sterling', 'everest-forms-pro' ),
+				'name'                => esc_html__( 'Pound Sterling', 'wpretail' ),
 				'symbol'              => '&pound;',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -44,7 +44,7 @@ class WPRetail_Helper_Functions {
 				'decimals'            => 2,
 			],
 			'EUR' => [
-				'name'                => esc_html__( 'Euro', 'everest-forms-pro' ),
+				'name'                => esc_html__( 'Euro', 'wpretail' ),
 				'symbol'              => '&euro;',
 				'symbol_pos'          => 'right',
 				'thousands_separator' => '.',
@@ -52,7 +52,7 @@ class WPRetail_Helper_Functions {
 				'decimals'            => 2,
 			],
 			'AUD' => [
-				'name'                => esc_html__( 'Australian Dollar', 'everest-forms-pro' ),
+				'name'                => esc_html__( 'Australian Dollar', 'wpretail' ),
 				'symbol'              => '&#36;',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -60,7 +60,7 @@ class WPRetail_Helper_Functions {
 				'decimals'            => 2,
 			],
 			'BRL' => [
-				'name'                => esc_html__( 'Brazilian Real', 'everest-forms-pro' ),
+				'name'                => esc_html__( 'Brazilian Real', 'wpretail' ),
 				'symbol'              => 'R$',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => '.',
@@ -68,7 +68,7 @@ class WPRetail_Helper_Functions {
 				'decimals'            => 2,
 			],
 			'CAD' => [
-				'name'                => esc_html__( 'Canadian Dollar', 'everest-forms-pro' ),
+				'name'                => esc_html__( 'Canadian Dollar', 'wpretail' ),
 				'symbol'              => '&#36;',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -76,7 +76,7 @@ class WPRetail_Helper_Functions {
 				'decimals'            => 2,
 			],
 			'CZK' => [
-				'name'                => esc_html__( 'Czech Koruna', 'everest-forms-pro' ),
+				'name'                => esc_html__( 'Czech Koruna', 'wpretail' ),
 				'symbol'              => '&#75;&#269;',
 				'symbol_pos'          => 'right',
 				'thousands_separator' => '.',
@@ -84,7 +84,7 @@ class WPRetail_Helper_Functions {
 				'decimals'            => 2,
 			],
 			'DKK' => [
-				'name'                => esc_html__( 'Danish Krone', 'everest-forms-pro' ),
+				'name'                => esc_html__( 'Danish Krone', 'wpretail' ),
 				'symbol'              => 'kr.',
 				'symbol_pos'          => 'right',
 				'thousands_separator' => '.',
@@ -92,7 +92,7 @@ class WPRetail_Helper_Functions {
 				'decimals'            => 2,
 			],
 			'HKD' => [
-				'name'                => esc_html__( 'Hong Kong Dollar', 'everest-forms-pro' ),
+				'name'                => esc_html__( 'Hong Kong Dollar', 'wpretail' ),
 				'symbol'              => '&#36;',
 				'symbol_pos'          => 'right',
 				'thousands_separator' => ',',
@@ -100,7 +100,7 @@ class WPRetail_Helper_Functions {
 				'decimals'            => 2,
 			],
 			'HUF' => [
-				'name'                => esc_html__( 'Hungarian Forint', 'everest-forms-pro' ),
+				'name'                => esc_html__( 'Hungarian Forint', 'wpretail' ),
 				'symbol'              => 'Ft',
 				'symbol_pos'          => 'right',
 				'thousands_separator' => '.',
@@ -108,7 +108,7 @@ class WPRetail_Helper_Functions {
 				'decimals'            => 2,
 			],
 			'ILS' => [
-				'name'                => esc_html__( 'Israeli New Sheqel', 'everest-forms-pro' ),
+				'name'                => esc_html__( 'Israeli New Sheqel', 'wpretail' ),
 				'symbol'              => '&#8362;',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -116,7 +116,7 @@ class WPRetail_Helper_Functions {
 				'decimals'            => 2,
 			],
 			'MYR' => [
-				'name'                => esc_html__( 'Malaysian Ringgit', 'everest-forms-pro' ),
+				'name'                => esc_html__( 'Malaysian Ringgit', 'wpretail' ),
 				'symbol'              => '&#82;&#77;',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -124,7 +124,7 @@ class WPRetail_Helper_Functions {
 				'decimals'            => 2,
 			],
 			'MXN' => [
-				'name'                => esc_html__( 'Mexican Peso', 'everest-forms-pro' ),
+				'name'                => esc_html__( 'Mexican Peso', 'wpretail' ),
 				'symbol'              => '&#36;',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -132,7 +132,7 @@ class WPRetail_Helper_Functions {
 				'decimals'            => 2,
 			],
 			'NOK' => [
-				'name'                => esc_html__( 'Norwegian Krone', 'everest-forms-pro' ),
+				'name'                => esc_html__( 'Norwegian Krone', 'wpretail' ),
 				'symbol'              => 'Kr',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => '.',
@@ -140,7 +140,7 @@ class WPRetail_Helper_Functions {
 				'decimals'            => 2,
 			],
 			'NZD' => [
-				'name'                => esc_html__( 'New Zealand Dollar', 'everest-forms-pro' ),
+				'name'                => esc_html__( 'New Zealand Dollar', 'wpretail' ),
 				'symbol'              => '&#36;',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -148,7 +148,7 @@ class WPRetail_Helper_Functions {
 				'decimals'            => 2,
 			],
 			'PHP' => [
-				'name'                => esc_html__( 'Philippine Peso', 'everest-forms-pro' ),
+				'name'                => esc_html__( 'Philippine Peso', 'wpretail' ),
 				'symbol'              => 'Php',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -156,7 +156,7 @@ class WPRetail_Helper_Functions {
 				'decimals'            => 2,
 			],
 			'PLN' => [
-				'name'                => esc_html__( 'Polish Zloty', 'everest-forms-pro' ),
+				'name'                => esc_html__( 'Polish Zloty', 'wpretail' ),
 				'symbol'              => '&#122;&#322;',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => '.',
@@ -164,7 +164,7 @@ class WPRetail_Helper_Functions {
 				'decimals'            => 2,
 			],
 			'RUB' => [
-				'name'                => esc_html__( 'Russian Ruble', 'everest-forms-pro' ),
+				'name'                => esc_html__( 'Russian Ruble', 'wpretail' ),
 				'symbol'              => 'pyб',
 				'symbol_pos'          => 'right',
 				'thousands_separator' => ' ',
@@ -172,7 +172,7 @@ class WPRetail_Helper_Functions {
 				'decimals'            => 2,
 			],
 			'SGD' => [
-				'name'                => esc_html__( 'Singapore Dollar', 'everest-forms-pro' ),
+				'name'                => esc_html__( 'Singapore Dollar', 'wpretail' ),
 				'symbol'              => '&#36;',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -180,7 +180,7 @@ class WPRetail_Helper_Functions {
 				'decimals'            => 2,
 			],
 			'ZAR' => [
-				'name'                => esc_html__( 'South African Rand', 'everest-forms-pro' ),
+				'name'                => esc_html__( 'South African Rand', 'wpretail' ),
 				'symbol'              => 'R',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -188,7 +188,7 @@ class WPRetail_Helper_Functions {
 				'decimals'            => 2,
 			],
 			'SEK' => [
-				'name'                => esc_html__( 'Swedish Krona', 'everest-forms-pro' ),
+				'name'                => esc_html__( 'Swedish Krona', 'wpretail' ),
 				'symbol'              => 'Kr',
 				'symbol_pos'          => 'right',
 				'thousands_separator' => '.',
@@ -196,7 +196,7 @@ class WPRetail_Helper_Functions {
 				'decimals'            => 2,
 			],
 			'CHF' => [
-				'name'                => esc_html__( 'Swiss Franc', 'everest-forms-pro' ),
+				'name'                => esc_html__( 'Swiss Franc', 'wpretail' ),
 				'symbol'              => 'CHF',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -204,7 +204,7 @@ class WPRetail_Helper_Functions {
 				'decimals'            => 2,
 			],
 			'TWD' => [
-				'name'                => esc_html__( 'Taiwan New Dollar', 'everest-forms-pro' ),
+				'name'                => esc_html__( 'Taiwan New Dollar', 'wpretail' ),
 				'symbol'              => '&#36;',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -212,7 +212,7 @@ class WPRetail_Helper_Functions {
 				'decimals'            => 2,
 			],
 			'THB' => [
-				'name'                => esc_html__( 'Thai Baht', 'everest-forms-pro' ),
+				'name'                => esc_html__( 'Thai Baht', 'wpretail' ),
 				'symbol'              => '&#3647;',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -220,7 +220,7 @@ class WPRetail_Helper_Functions {
 				'decimals'            => 2,
 			],
 			'JPY' => [
-				'name'                => esc_html__( 'Japanese yen', 'everest-forms-pro' ),
+				'name'                => esc_html__( 'Japanese yen', 'wpretail' ),
 				'symbol'              => '&yen;',
 				'symbol_pos'          => 'left',
 				'thousands_separator' => ',',
@@ -230,5 +230,26 @@ class WPRetail_Helper_Functions {
 		];
 
 		return apply_filters( 'everest_forms_currencies', $currencies );
+	}
+
+
+	/**
+	 * Serializer.
+	 *
+	 * @param mixed $array Array to be serailised.
+	 * @return void
+	 */
+	public function wpretail_encode( $array ) {
+		return json_encode( $array );
+	}
+
+	/**
+	 * Un Serializer.
+	 *
+	 * @param mixed $array Array to be unserailised.
+	 * @return void
+	 */
+	public function wpretail_decode( $obj ) {
+		return json_decode( $obj, true );
 	}
 }

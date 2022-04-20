@@ -38,6 +38,8 @@ class WPRetail_Ajax extends WPRetail_Sanitizer {
 			return wp_send_json_error( [ 'errors' => $this->errors ] );
 		}
 
+		error_log( print_r( $this->target . '_handler', true ) );
+
 		do_action( $this->target . '_handler', $this );
 
 		if ( ! empty( $this->errors ) ) {

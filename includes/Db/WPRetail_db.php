@@ -116,6 +116,50 @@ class WPRetail_Db {
 	}
 
 	/**
+	 * Tax Rates.
+	 *
+	 * @param mixed $id ID.
+	 * @return mixed $tax_rates Tax Rates.
+	 */
+	public function get_tax_rates( $id = null ) {
+		if ( ! empty( $id ) ) {
+			$tax_rates = $this->db->get_row(
+				$this->db->prepare(
+					"SELECT * FROM {$this->db->prefix}wpretail_tax_rates WHERE `id` = %s",
+					$id
+				)
+			);
+		} else {
+			$tax_rates = $this->db->get_results(
+				"SELECT * FROM {$this->db->prefix}wpretail_tax_rates WHERE status = TRUE"
+			);
+		}
+		return (array) $tax_rates;
+	}
+
+	/**
+	 * Tax Rates.
+	 *
+	 * @param mixed $id ID.
+	 * @return mixed $tax_rates Tax Rates.
+	 */
+	public function get_tax_groups( $id = null ) {
+		if ( ! empty( $id ) ) {
+			$tax_groups = $this->db->get_row(
+				$this->db->prepare(
+					"SELECT * FROM {$this->db->prefix}wpretail_tax_groups WHERE `id` = %s",
+					$id
+				)
+			);
+		} else {
+			$tax_groups = $this->db->get_results(
+				"SELECT * FROM {$this->db->prefix}wpretail_tax_groups WHERE status = TRUE"
+			);
+		}
+		return (array) $tax_groups;
+	}
+
+	/**
 	 * Get last insert ID.
 	 *
 	 * @return int ID
