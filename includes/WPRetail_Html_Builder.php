@@ -701,4 +701,23 @@ class WPRetail_Html_Builder {
 	public function section_title( $title ) {
 		self::html( 'h4', [ 'class' => [ 'wpretail-section-title' ], 'content' => $title, 'closed' => true ] );
 	}
+
+	public function card( $args ) {
+		self::html( 'div', ['class'=>['card'] ]);
+		if( empty( $args['title'] ) ) {
+			$args['title'] = '';
+		}
+		if( empty( $args['content'] ) ) {
+			$args['content'] = '';
+		}
+		if( !empty($args['image'])) {
+			self::html( 'img', [ 'class'=>['card-img-top'], 'attr' => [ 'src' => $args['image'], 'alt' => $args['title'], 'style' => 'width:100%;max-height:200px' ] ]);
+		}
+		self::html( 'div', [ 'class' => ['card-body'] ] );
+		self::html( 'h5', [ 'class' => ['card-title'], 'content' => $args['title'], 'closed' => true ] );
+		self::html( 'p', [ 'class' => ['card-text'], 'content' => $args['content'], 'closed' => true ] );
+		self::html( 'a', [ 'class' => ['btn btn-primary'], 'content' => __('Install'), 'closed' => true ] );
+		self::html( 'div');
+		self::html( 'div');
+	}
 }

@@ -35,6 +35,8 @@ class WPRetail_Settings {
 		add_action( 'wpretail_view_business_setting', [ $this, 'view_business_setting' ] );
 		add_action( 'wpretail_view_location_setting', [ $this, 'view_location_setting' ] );
 		add_action( 'wpretail_view_tax_setting', [ $this, 'view_tax_setting' ] );
+		add_action( 'wpretail_view_prefix_setting', [ $this, 'view_prefix_setting' ] );
+		add_action( 'wpretail_view_modules_setting', [ $this, 'view_modules_setting' ] );
 
 		// DB Handler.
 		// Business.
@@ -53,6 +55,27 @@ class WPRetail_Settings {
 		add_action( 'wpretail_tax_group_setting_handler', [ $this, 'tax_group_setting_handler' ] );
 		add_action( 'wpretail_list_tax_group_setting_handler', [ $this, 'list_tax_group_setting_handler' ] );
 
+		// Prefix.
+		add_action( 'wpretail_prefix_setting_handler', [ $this, 'prefix_setting_handler' ] );
+
+	}
+
+	public function view_modules_setting() {
+		$modules = apply_filters( 'wpretail_registered_modules', [] );
+
+		wpretail()->builder->html( 'div', [ 'class' => [ 'container' ] ] );
+		wpretail()->builder->html( 'div', [ 'class' => [ 'row' ] ] );
+		foreach( $modules as $key => $module ) {
+			wpretail()->builder->html( 'div', [ 'class' => [ 'col-md-3' ] ] );
+			wpretail()->builder->card( [
+				'title' => $module['title'],
+				'content' => $module['description'],
+				'image' => $module['image']
+			]);
+			wpretail()->builder->html( 'div' );
+		}
+		wpretail()->builder->html( 'div' );
+		wpretail()->builder->html( 'div' );
 	}
 
 	/**
@@ -420,6 +443,59 @@ class WPRetail_Settings {
 		}
 	}
 
+		/**
+	 * Tax setting handler.
+	 *
+	 * @param mixed $ajax Ajax.
+	 * @return void
+	 */
+	public function prefix_setting_handler( $ajax ) {
+		$fields = [
+			'business_id' => '1', // Always.
+			'status'      => '1', // Always.
+			'name'        => $ajax->sanitized_fields['tax_name'],
+			'rate'        => $ajax->sanitized_fields['tax_rate'],
+			'for_group'   => $ajax->sanitized_fields['for_group'],
+		];
+
+		$db = new WPRetail\Db\WPRetail_Db( 'wpretail_tax_rates' );
+
+		try {
+			if ( ! empty( $ajax->event['id'] ) ) {
+				$where = [ 'id' => $ajax->event['id'] ];
+				$id    = $db->update( $fields, $where );
+				if ( $id ) {
+					$ajax->success['message'] = __( 'Tax updated successfully', 'wpretail' );
+					$ajax->success['id']      = $ajax->event['id'];
+					$formatted_fields         = [
+						'tax_name'  => $fields['name'],
+						'tax_rate'  => $fields['rate'],
+						'for_group' => $fields['for_group'],
+					];
+					$ajax->success['updated'] = $formatted_fields;
+				} else {
+					$ajax->errors['message'] = __( 'Tax Could not be updated', 'wpretail' );
+				}
+				return;
+			}
+			$id = $db->insert( $fields );
+			if ( $id ) {
+				$ajax->success['message']  = __( 'Tax added successfully', 'wpretail' );
+				$ajax->success['id']       = $db->get_last_insert_id();
+				$formatted_fields         = [
+					'tax_name'  => $fields['name'],
+					'tax_rate'  => $fields['rate'],
+					'for_group' => $fields['for_group'],
+				];
+				$ajax->success['inserted'] = $formatted_fields;
+			} else {
+				$ajax->errors['message'] = __( 'Tax Could not be added', 'wpretail' );
+			}
+		} catch ( Exception $e ) {
+			$ajax->errors['message'] = $e->getMessage();
+		}
+	}
+
 	/**
 	 * Tax setting handler.
 	 *
@@ -490,25 +566,17 @@ class WPRetail_Settings {
 						'name' => 'Location',
 						'slug' => 'location_setting',
 					],
-					'invoice_seting'       => [
-						'name' => 'Invoice',
-						'slug' => 'invoice_seting',
-					],
-					'barcode_setting'      => [
-						'name' => 'Barcode',
-						'slug' => 'barcode_setting',
-					],
 					'tax_setting'          => [
 						'name' => 'Tax',
 						'slug' => 'tax_setting',
 					],
-					'printer_setting'      => [
-						'name' => 'Printer',
-						'slug' => 'printer_setting',
+					'prefix_setting' => [
+						'name' => 'Prefix',
+						'slug' => 'prefix',
 					],
-					'subscription_setting' => [
-						'name' => 'Subscription',
-						'slug' => 'subscription_setting',
+					'modules_setting' => [
+						'name' => 'Modules',
+						'slug' => 'modules',
 					],
 				]
 			)
@@ -956,6 +1024,184 @@ class WPRetail_Settings {
 				'col'   => 'col-md-6',
 			],
 		];
+		$prefix_settings = [
+			'purchase'  => [
+				'label' => [
+					'content' => __( 'Purchase', 'wpretail' ) . '*',
+				],
+				'input' => [
+					'type' => 'text',
+					'name' => 'purchase',
+					'id'   => 'purchase',
+				],
+				'col'   => 'col-md-4',
+			],
+			'purchase_return'  => [
+				'label' => [
+					'content' => __( 'Purchase Return', 'wpretail' ) . '*',
+				],
+				'input' => [
+					'type' => 'text',
+					'name' => 'purchase_return',
+					'id'   => 'purchase_return',
+				],
+				'col'   => 'col-md-4',
+			],
+			'purchase_order'  => [
+				'label' => [
+					'content' => __( 'Purchase Order', 'wpretail' ) . '*',
+				],
+				'input' => [
+					'type' => 'text',
+					'name' => 'purchase_order',
+					'id'   => 'purchase_order',
+				],
+				'col'   => 'col-md-4',
+			],
+			'stock_transfer'  => [
+				'label' => [
+					'content' => __( 'Stock Transfer', 'wpretail' ) . '*',
+				],
+				'input' => [
+					'type' => 'text',
+					'name' => 'stock_transfer',
+					'id'   => 'stock_transfer',
+				],
+				'col'   => 'col-md-4',
+			],
+			'stock_adjustment'  => [
+				'label' => [
+					'content' => __( 'Stock Adjustment', 'wpretail' ) . '*',
+				],
+				'input' => [
+					'type' => 'text',
+					'name' => 'stock_adjustment',
+					'id'   => 'stock_adjustment',
+				],
+				'col'   => 'col-md-4',
+			],
+			'sell_return'  => [
+				'label' => [
+					'content' => __( 'Sell Return', 'wpretail' ) . '*',
+				],
+				'input' => [
+					'type' => 'text',
+					'name' => 'sell_return',
+					'id'   => 'sell_return',
+				],
+				'col'   => 'col-md-4',
+			],
+			'expenses'  => [
+				'label' => [
+					'content' => __( 'Expenses', 'wpretail' ) . '*',
+				],
+				'input' => [
+					'type' => 'text',
+					'name' => 'expenses',
+					'id'   => 'expenses',
+				],
+				'col'   => 'col-md-4',
+			],
+			'contact'  => [
+				'label' => [
+					'content' => __( 'Contact', 'wpretail' ) . '*',
+				],
+				'input' => [
+					'type' => 'text',
+					'name' => 'contact',
+					'id'   => 'contact',
+				],
+				'col'   => 'col-md-4',
+			],
+			'purchase_return'  => [
+				'label' => [
+					'content' => __( 'Purchase Return', 'wpretail' ) . '*',
+				],
+				'input' => [
+					'type' => 'text',
+					'name' => 'purchase_return',
+					'id'   => 'purchase_return',
+				],
+				'col'   => 'col-md-4',
+			],
+			'sell_payment'  => [
+				'label' => [
+					'content' => __( 'Sell Payment', 'wpretail' ) . '*',
+				],
+				'input' => [
+					'type' => 'text',
+					'name' => 'sell_payment',
+					'id'   => 'sell_payment',
+				],
+				'col'   => 'col-md-4',
+			],
+			'expense_payment'  => [
+				'label' => [
+					'content' => __( 'Expense Payment', 'wpretail' ) . '*',
+				],
+				'input' => [
+					'type' => 'text',
+					'name' => 'expense_payment',
+					'id'   => 'expense_payment',
+				],
+				'col'   => 'col-md-4',
+			],
+			'Business_Location'  => [
+				'label' => [
+					'content' => __( 'Tax Name', 'wpretail' ) . '*',
+				],
+				'input' => [
+					'type' => 'text',
+					'name' => 'Business_Location',
+					'id'   => 'Business_Location',
+				],
+				'col'   => 'col-md-4',
+			],
+			'username'  => [
+				'label' => [
+					'content' => __( 'User Name', 'wpretail' ) . '*',
+				],
+				'input' => [
+					'type' => 'text',
+					'name' => 'username',
+					'id'   => 'username',
+				],
+				'col'   => 'col-md-4',
+			],
+			'subscription_number'  => [
+				'label' => [
+					'content' => __( 'Subscription Number', 'wpretail' ) . '*',
+				],
+				'input' => [
+					'type' => 'text',
+					'name' => 'subscription_number',
+					'id'   => 'subscription_number',
+				],
+				'col'   => 'col-md-4',
+			],
+			'draft'  => [
+				'label' => [
+					'content' => __( 'Draft', 'wpretail' ) . '*',
+				],
+				'input' => [
+					'type' => 'text',
+					'name' => 'draft',
+					'id'   => 'draft',
+				],
+				'col'   => 'col-md-4',
+			],
+			'sales_order'  => [
+				'label' => [
+					'content' => __( 'Sales Order', 'wpretail' ) . '*',
+				],
+				'input' => [
+					'type' => 'text',
+					'name' => 'sales_order',
+					'id'   => 'sales_order',
+				],
+				'col'   => 'col-md-4',
+			],
+		];
 
 		$db                  = new WPRetail\Db\WPRetail_Db( 'wpretail_tax_rates' );
 		$tax_rates           = $db->get_tax_rates();
@@ -1003,9 +1249,39 @@ class WPRetail_Settings {
 					'location_setting'  => $location_settings,
 					'tax_rate_setting'  => $tax_rate_settings,
 					'tax_group_setting' => $tax_group_settings,
+					'prefix_setting' => $prefix_settings
 				]
 			)
 		);
+	}
+
+		/**
+	 * Buisness Settinh View.
+	 *
+	 * @return void
+	 */
+	public function view_prefix_setting() {
+
+		$field_options = apply_filters( 'wpretail_form_fields_options', [] );
+
+		$prefix_setting = $field_options['prefix_setting'];
+
+		$args = [
+			'form_args'  => [
+				'id'                => 'wpretail_prefix_setting',
+				'class'             => [ 'wpretail-prefix-setting' ],
+				'attr'              => [
+					'action' => admin_url(),
+					'method' => 'post',
+				],
+				'form_title'        => __( 'Update Prefix', 'wpretail' ),
+				'form_submit_id'    => 'wpretail_add_prefix',
+				'form_submit_label' => __( 'Update Prefix', 'wpretail' ),
+			],
+			'input_args' => $prefix_setting,
+		];
+
+		wpretail()->builder->form( $args );
 	}
 
 	/**

@@ -138,6 +138,7 @@ final class WPRetail {
 			'Settings\\WPRetail_Settings',
 			'Admin\\Admin_Menus',
 			'Ajax\\WPRetail_Ajax',
+			'Modules\\WPRetail_Modules'
 		];
 	}
 
