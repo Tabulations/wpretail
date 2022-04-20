@@ -71,11 +71,107 @@ class WPRetail_Db {
 		);
 	}
 
+		/**
+		 * Brand Data.
+		 *
+		 * @param mixed $args Args.
+		 * @param mixed $where Args.
+		 * @return int ID.
+		 */
+	public function get_brand( $id = null ) {
+		if ( ! empty( $id ) ) {
+			$brand = $this->db->get_row(
+				$this->db->prepare(
+					"SELECT * FROM {$this->db->prefix}wpretail_brands WHERE `id` = %s",
+					$id
+				)
+			);
+		} else {
+			$brand = $this->db->get_results(
+				"SELECT * FROM {$this->db->prefix}wpretail_brands WHERE status = TRUE"
+			);
+		}
+		return (array) $brand;
+	}
+
+		/**
+		 * Categiry Data.
+		 *
+		 * @param mixed $args Args.
+		 * @param mixed $where Args.
+		 * @return int ID.
+		 */
+	public function get_category( $id = null ) {
+		if ( ! empty( $id ) ) {
+			$category = $this->db->get_row(
+				$this->db->prepare(
+					"SELECT * FROM {$this->db->prefix}wpretail_categories WHERE `id` = %s",
+					$id
+				)
+			);
+		} else {
+			$category = $this->db->get_results(
+				"SELECT * FROM {$this->db->prefix}wpretail_categories WHERE status= TRUE"
+			);
+		}
+		return (array) $category;
+	}
+
+		/**
+		 * Warranty Data.
+		 *
+		 * @param mixed $args Args.
+		 * @param mixed $where Args.
+		 * @return int ID.
+		 */
+	public function get_warranty( $id = null ) {
+		if ( ! empty( $id ) ) {
+			$category = $this->db->get_row(
+				$this->db->prepare(
+					"SELECT * FROM {$this->db->prefix}wpretail_warranties
+						WHERE `id` = %s",
+					$id
+				)
+			);
+		} else {
+			$category = $this->db->get_results(
+				"SELECT * FROM {$this->db->prefix}wpretail_warranties
+					WHERE status= TRUE"
+			);
+		}
+		return (array) $category;
+	}
+
+			/**
+		 * Unit Data.
+		 *
+		 * @param mixed $args Args.
+		 * @param mixed $where Args.
+		 * @return int ID.
+		 */
+		public function get_unit( $id = null ) {
+			if ( ! empty( $id ) ) {
+				$unit = $this->db->get_row(
+					$this->db->prepare(
+						"SELECT * FROM {$this->db->prefix}wpretail_units
+							WHERE `id` = %s",
+						$id
+					)
+				);
+			} else {
+				$unit = $this->db->get_results(
+					"SELECT * FROM {$this->db->prefix}wpretail_units
+						WHERE status= TRUE"
+				);
+			}
+			return (array) $unit;
+		}
+
 	/**
 	 * Get Business.
 	 *
 	 * @param mixed $id ID.
-	 * @return mixed $businesss Business.
+	 * @return mixed $business Business.
 	 */
 	public function get_business( $id = null ) {
 		if ( ! empty( $id ) ) {

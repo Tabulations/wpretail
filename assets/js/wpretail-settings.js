@@ -72,6 +72,7 @@ jQuery( function ( $ ) {
 										'wpretail_list_'
 									);
 
+
 									if (
 										$( document ).has( '#' + listId ).length
 									) {
@@ -99,6 +100,9 @@ jQuery( function ( $ ) {
 														var target = $(
 															this
 														).data( 'target' );
+														console.log(row.find( 'td' )
+														.eq( index )
+														.html());
 														row.find( 'td' )
 															.eq( index )
 															.html(

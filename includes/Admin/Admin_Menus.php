@@ -1,4 +1,5 @@
 <?php
+
 namespace WPRetail\Admin;
 
 /**
@@ -10,17 +11,19 @@ namespace WPRetail\Admin;
  */
 
 
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
 /**
  * WpRetail_Admin_Menus Class.
  */
-class Admin_Menus {
+class Admin_Menus
+{
 
 	/**
 	 * Hook in tabs.
 	 */
-	public function __construct() {
+	public function __construct()
+	{
 		// Add menus.
 		add_action( 'admin_menu', [ $this, 'admin_menu' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'init' ] );
