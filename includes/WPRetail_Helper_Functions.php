@@ -237,19 +237,19 @@ class WPRetail_Helper_Functions {
 	 * Serializer.
 	 *
 	 * @param mixed $array Array to be serailised.
-	 * @return void
+	 * @return string Json.
 	 */
-	public function wpretail_encode( $array ) {
+	public function encode( $array ) {
 		return json_encode( $array );
 	}
 
 	/**
 	 * Un Serializer.
 	 *
-	 * @param mixed $array Array to be unserailised.
-	 * @return void
+	 * @param mixed $array JSON Object to be unserailised.
+	 * @return mixed $obj Array.
 	 */
-	public function wpretail_decode( $obj ) {
+	public function decode( $obj ) {
 		return json_decode( $obj, true );
 	}
 }

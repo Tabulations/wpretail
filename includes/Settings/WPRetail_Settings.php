@@ -349,7 +349,7 @@ class WPRetail_Settings {
 								$tax                       = $db->get_tax_groups( $ajax->event['id'] );
 								$fields                    = [
 									'group_name' => $tax['name'],
-									'sub_taxes' => wpretail()->helper->unserialize($tax['taxes']),
+									'sub_taxes' => wpretail()->helper->decode($tax['taxes']),
 								];
 								$ajax->success['message']  = __( 'Update Group', 'wpretail' );
 								$ajax->success['location'] = $fields;
@@ -406,7 +406,12 @@ class WPRetail_Settings {
 			if ( $id ) {
 				$ajax->success['message']  = __( 'Tax added successfully', 'wpretail' );
 				$ajax->success['id']       = $db->get_last_insert_id();
-				$ajax->success['inserted'] = $fields;
+				$formatted_fields         = [
+					'tax_name'  => $fields['name'],
+					'tax_rate'  => $fields['rate'],
+					'for_group' => $fields['for_group'],
+				];
+				$ajax->success['inserted'] = $formatted_fields;
 			} else {
 				$ajax->errors['message'] = __( 'Tax Could not be added', 'wpretail' );
 			}
@@ -426,7 +431,7 @@ class WPRetail_Settings {
 			'business_id' => '1', // Always.
 			'status'      => '1', // Always.
 			'name'        => $ajax->sanitized_fields['group_name'],
-			'taxes'       => wpretail()->helper->serialize( $ajax->sanitized_fields['sub_taxes'] ),
+			'taxes'       => wpretail()->helper->encode( $ajax->sanitized_fields['sub_taxes'] ),
 		];
 
 		$db = new WPRetail\Db\WPRetail_Db( 'wpretail_tax_groups' );
@@ -440,7 +445,7 @@ class WPRetail_Settings {
 					$ajax->success['id']      = $ajax->event['id'];
 					$formatted_fields         = [
 						'group_name' => $fields['name'],
-						'sub_taxes' => wpretail()->helper->unserialize( $fields['taxes'] ),
+						'sub_taxes' => wpretail()->helper->decode( $fields['taxes'] ),
 					];
 					$ajax->success['updated'] = $formatted_fields;
 				} else {
@@ -452,7 +457,11 @@ class WPRetail_Settings {
 			if ( $id ) {
 				$ajax->success['message']  = __( 'Tax Group added successfully', 'wpretail' );
 				$ajax->success['id']       = $db->get_last_insert_id();
-				$ajax->success['inserted'] = $fields;
+				$formatted_fields         = [
+					'group_name' => $fields['name'],
+					'sub_taxes' => wpretail()->helper->decode( $fields['taxes'] ),
+				];
+				$ajax->success['inserted'] = $formatted_fields;
 			} else {
 				$ajax->errors['message'] = __( 'Tax Group Could not be added', 'wpretail' );
 			}
@@ -1037,7 +1046,7 @@ class WPRetail_Settings {
 					],
 					'data'   => [
 						'name' => 'tax_name',
-						'rate' => 'tax_	rate',
+						'rate' => 'tax_rate',
 					],
 				],
 				'actions' => [
