@@ -1107,6 +1107,9 @@ class WPRetail_Products {
 				'col'   => 'col-md-12',
 			],
 			'unit_allow_decimal' => [
+				'label' => [
+					'content' => __( 'Allow Decimal ' ),
+				],
 				'input' => [
 					'type'    => 'select',
 					'name'    => 'unit_allow_decimal',
@@ -1126,7 +1129,7 @@ class WPRetail_Products {
 				[
 					'add_product' => $add_product,
 					'category'    => $category,
-					'brand'       => $unit,
+					'brand'       => $brand,
 					'warranty'    => $warranty,
 					'unit'        => $unit,
 				]
