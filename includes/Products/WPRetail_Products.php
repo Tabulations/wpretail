@@ -342,8 +342,16 @@ class WPRetail_Products {
 				$id = $db->insert( $fields );
 				if ( $id ) {
 					$ajax->success['message']  = __( 'Warranty added successfully', 'wpretail' );
+					$formatted_fields         = [
+						'business_id'            => '1', // Always.
+						'status'                 => '1', // Always.
+						'warranty_name'          => $fields['name'],
+						'warranty_description'   => $fields['description'],
+						'warranty_duration'      => $fields['duration'],
+						'warranty_duration_type' => $fields['duration_type'],
+					];
 					$ajax->success['id']       = $db->get_last_insert_id();
-					$ajax->success['inserted'] = $fields;
+					$ajax->success['inserted'] = $formatted_fields;
 				} else {
 					$ajax->errors['message'] = __( 'Warranty Could not be added', 'wpretail' );
 				}
@@ -454,7 +462,14 @@ class WPRetail_Products {
 				if ( $id ) {
 					$ajax->success['message']  = __( 'Category added successfully', 'wpretail' );
 					$ajax->success['id']       = $db->get_last_insert_id();
-					$ajax->success['inserted'] = $fields;
+					$formatted_fields         = [
+						'business_id'          => '1', // Always.
+						'status'               => '1', // Always.
+						'category_code'        => $fields['short_code'],
+						'category_name'        => $fields['name'],
+						'category_description' => $fields['description'],
+					];
+					$ajax->success['inserted'] = $formatted_fields;
 				} else {
 					$ajax->errors['message'] = __( 'Category Could not be added', 'wpretail' );
 				}
@@ -559,7 +574,13 @@ class WPRetail_Products {
 				if ( $id ) {
 					$ajax->success['message']  = __( 'Brand added successfully', 'wpretail' );
 					$ajax->success['id']       = $db->get_last_insert_id();
-					$ajax->success['inserted'] = $fields;
+					$formatted_fields         = [
+						'business_id'       => '1', // Always.
+						'status'            => '1', // Always.
+						'brand_name'        => $fields['name'],
+						'brand_description' => $fields['description'],
+					];
+					$ajax->success['inserted'] = $formatted_fields;
 				} else {
 					$ajax->errors['message'] = __( 'Brand Could not be added', 'wpretail' );
 				}
