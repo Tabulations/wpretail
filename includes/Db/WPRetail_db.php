@@ -71,6 +71,31 @@ class WPRetail_Db {
 		);
 	}
 
+	    /**
+		 * Product Data.
+		 *
+		 * @param mixed $args Args.
+		 * @param mixed $where Args.
+		 * @return int ID.
+		 */
+		public function get_product( $id = null ) {
+			if ( ! empty( $id ) ) {
+				$unit = $this->db->get_row(
+					$this->db->prepare(
+						"SELECT * FROM {$this->db->prefix}wpretail_products
+							WHERE `id` = %s",
+						$id
+					)
+				);
+			} else {
+				$unit = $this->db->get_results(
+					"SELECT * FROM {$this->db->prefix}wpretail_products
+						WHERE status= TRUE"
+				);
+			}
+			return (array) $unit;
+		}
+
 		/**
 		 * Brand Data.
 		 *

@@ -29,10 +29,9 @@ class WPRetail_Products {
 		add_filter( 'wpretail_form_fields_options', [ $this, 'form_fields_option' ] );
 
 		// View
-		add_action( 'wpretail_view_add_product', [ $this, 'view_add_product' ] );
+		add_action( 'wpretail_view_product', [ $this, 'view_product' ] );
 		add_action( 'wpretail_view_category', [ $this, 'view_category' ] );
 		add_action( 'wpretail_view_brand', [ $this, 'view_brand' ] );
-		add_action( 'wpretail_view_list', [ $this, 'view_list' ] );
 		add_action( 'wpretail_view_warranty', [ $this, 'view_warranty' ] );
 		add_action( 'wpretail_view_unit', [ $this, 'view_unit' ] );
 
@@ -54,11 +53,11 @@ class WPRetail_Products {
 	}
 
 		/**
-	 * List Unit Handler.
-	 *
-	 * @param mixed $ajax Ajax Object.
-	 * @return void
-	 */
+		 * List Unit Handler.
+		 *
+		 * @param mixed $ajax Ajax Object.
+		 * @return void
+		 */
 	public function list_unit_handler( $ajax ) {
 
 		if ( ! empty( $ajax->event ) ) {
@@ -88,10 +87,10 @@ class WPRetail_Products {
 							try {
 								$warranty                  = $db->get_unit( $ajax->event['id'] );
 								$fields                    = [
-									'business_id'          => '1', // Always.
-									'unit_name'        => $warranty['name'],
-									'unit_short_name' => $warranty['short_name'],
-									'unit_allow_decimal'    => $warranty['allow_decimal'],
+									'business_id'        => '1', // Always.
+									'unit_name'          => $warranty['name'],
+									'unit_short_name'    => $warranty['short_name'],
+									'unit_allow_decimal' => $warranty['allow_decimal'],
 								];
 								$ajax->success['message']  = __( 'Update Unit', 'wpretail' );
 								$ajax->success['location'] = $fields;
@@ -134,9 +133,9 @@ class WPRetail_Products {
 					$ajax->success['message'] = 'Unit updated successfully';
 					$ajax->success['id']      = $ajax->event['id'];
 					$formatted_fields         = [
-						'business_id'   => '1', // Always.
-						'status'        => '1', // Always.
-						'unit_name'     => $fields['name'],
+						'business_id'        => '1', // Always.
+						'status'             => '1', // Always.
+						'unit_name'          => $fields['name'],
 						'unit_short_name'    => $fields['short_name'],
 						'unit_allow_decimal' => $fields['allow_decimal'],
 					];
@@ -151,10 +150,10 @@ class WPRetail_Products {
 				if ( $id ) {
 					$ajax->success['message']  = __( 'Unit added successfully', 'wpretail' );
 					$ajax->success['id']       = $db->get_last_insert_id();
-					$formatted_fields         = [
-						'business_id'   => '1', // Always.
-						'status'        => '1', // Always.
-						'unit_name'     => $fields['name'],
+					$formatted_fields          = [
+						'business_id'        => '1', // Always.
+						'status'             => '1', // Always.
+						'unit_name'          => $fields['name'],
 						'unit_short_name'    => $fields['short_name'],
 						'unit_allow_decimal' => $fields['allow_decimal'],
 					];
@@ -342,7 +341,7 @@ class WPRetail_Products {
 				$id = $db->insert( $fields );
 				if ( $id ) {
 					$ajax->success['message']  = __( 'Warranty added successfully', 'wpretail' );
-					$formatted_fields         = [
+					$formatted_fields          = [
 						'business_id'            => '1', // Always.
 						'status'                 => '1', // Always.
 						'warranty_name'          => $fields['name'],
@@ -462,7 +461,7 @@ class WPRetail_Products {
 				if ( $id ) {
 					$ajax->success['message']  = __( 'Category added successfully', 'wpretail' );
 					$ajax->success['id']       = $db->get_last_insert_id();
-					$formatted_fields         = [
+					$formatted_fields          = [
 						'business_id'          => '1', // Always.
 						'status'               => '1', // Always.
 						'category_code'        => $fields['short_code'],
@@ -574,7 +573,7 @@ class WPRetail_Products {
 				if ( $id ) {
 					$ajax->success['message']  = __( 'Brand added successfully', 'wpretail' );
 					$ajax->success['id']       = $db->get_last_insert_id();
-					$formatted_fields         = [
+					$formatted_fields          = [
 						'business_id'       => '1', // Always.
 						'status'            => '1', // Always.
 						'brand_name'        => $fields['name'],
@@ -664,49 +663,6 @@ class WPRetail_Products {
 		 ];
 
 			wpretail()->builder->form( $args );
-	}
-
-	/**
-	 * Add List View.
-	 *
-	 * @return void
-	 */
-	public function view_list() {
-		$field_options = apply_filters( 'wpretail_form_fields_options', [] );
-		wpretail()->builder->table(
-			[
-				'head'  => [
-					'labels' => [
-						__( 'Product', 'wpretail' ),
-						__( 'Business Location', 'wpretail' ),
-						__( 'Unit Purchase Price', 'wpretail' ),
-						__( 'Unit Selling Price', 'wpretail' ),
-						__( 'Current Stock', 'wpretail' ),
-						__( 'Product Type', 'wpretail' ),
-						__( 'Category', 'wpretail' ),
-						__( 'Brand', 'wpretail' ),
-						__( 'SKU', 'wpretail' ),
-					],
-
-				],
-				'body'  => [
-					[
-						'test',
-						'test',
-						'test',
-						'test',
-						'test',
-						'test',
-						'test',
-						'test',
-						'test',
-					],
-				],
-				'class' => [ 'wpretail-datatable', 'table table-primary mt-5' ],
-				'col'   => 'col-md-12',
-			]
-		);
-
 	}
 
 	/**
@@ -861,21 +817,65 @@ class WPRetail_Products {
 		 *
 		 * @return void
 		 */
-	public function view_add_product() {
-		$field_options = apply_filters( 'wpretail_form_fields_options', [] );
-		$settings      = $field_options['add_product'];
+	public function view_product() {
 
+		$field_options = apply_filters( 'wpretail_form_fields_options', [] );
+		$settings      = $field_options['product'];
+		$db            = new WPRetail\Db\WPRetail_Db( 'wpretail_products' );
+
+		wpretail()->builder->html(
+			'button',
+			[
+				'id'      => 'add_product',
+				'content' => __( 'Add Product' ),
+				'class'   => [ 'mb-3 btn btn-primary' ],
+				'closed'  => true,
+				'attr'    => [ 'type' => 'button' ],
+				'data'    => [
+					'bs-toggle' => 'modal',
+					'bs-target' => '#wpretail_product_modal',
+				],
+			]
+		);
+
+		wpretail()->builder->table(
+			[
+				'head'    => [
+					'labels' => [
+						'name'        => __( 'Product', 'wpretail' ),
+					],
+					'data'   => [
+						'name' => 'product_name',
+					],
+				],
+				'actions' => [
+					'options'        => [
+						'edit',
+						'delete',
+					],
+					'delete_confirm' => __( 'Are you sure you want to remove?', 'wpretail' ),
+					'update_confirm' => __( 'Are you sure you want to update?', 'wpretail' ),
+				],
+				'id'      => 'wpretail_list_product',
+				'body'    => $db->get_product(),
+				'class'   => [ 'wpretail-datatable', 'table table-primary mt-5' ],
+				'col'     => 'col-md-12',
+
+			]
+		);
 		$args = [
 			'form_args'  => [
-				'id'                => 'wpretail_add_product',
-				'class'             => [ 'wpretail-add-product' ],
+				'id'                => 'wpretail_product',
+				'class'             => [ 'wpretail-product' ],
 				'attr'              => [
 					'action' => admin_url(),
 					'method' => 'post',
 				],
-				'form_title'        => __( 'Add New Product', 'wpretail' ),
+				'form_title'        => __( 'Add Product', 'wpreatil' ),
 				'form_submit_id'    => 'wpretail_add_product',
 				'form_submit_label' => __( 'Add Product', 'wpretail' ),
+				'is_modal'          => true,
+				'modal'             => 'modal-md modal-dialog-centered modal-dialog-scrollable',
 			],
 			'input_args' => $settings,
 		];
@@ -890,8 +890,8 @@ class WPRetail_Products {
 	 * @return void
 	 */
 	public function form_fields_option( $field_options ) {
-		$brands      = [ 'apple', 'samsung', 'nokia', 'micromax', 'realme', 'redme' ];
-		$add_product = [
+		$brands   = [ 'apple', 'samsung', 'nokia', 'micromax', 'realme', 'redme' ];
+		$product  = [
 			'product_name' => [
 				'label' => [
 					'content' => __( 'Product Name' ) . '*',
@@ -961,7 +961,7 @@ class WPRetail_Products {
 				'col'   => 'col-md-4',
 			],
 		];
-		$category    = [
+		$category = [
 			'category_name' => [
 				'label' => [
 					'content' => __( 'Category Name ' ) . '*',
@@ -1148,11 +1148,11 @@ class WPRetail_Products {
 			array_merge(
 				$field_options,
 				[
-					'add_product' => $add_product,
-					'category'    => $category,
-					'brand'       => $brand,
-					'warranty'    => $warranty,
-					'unit'        => $unit,
+					'product'  => $product,
+					'category' => $category,
+					'brand'    => $brand,
+					'warranty' => $warranty,
+					'unit'     => $unit,
 				]
 			)
 		);
@@ -1170,27 +1170,23 @@ class WPRetail_Products {
 			array_merge(
 				$options,
 				[
-					'list'        => [
-						'name' => 'List Product',
-						'slug' => 'list',
-					],
-					'add_product' => [
+					'product'  => [
 						'name' => 'Add Product',
-						'slug' => 'add_product',
+						'slug' => 'product',
 					],
-					'category'    => [
+					'category' => [
 						'name' => 'Categories',
 						'slug' => 'category',
 					],
-					'brand'       => [
+					'brand'    => [
 						'name' => 'Brands',
 						'slug' => 'brand',
 					],
-					'warranty'    => [
+					'warranty' => [
 						'name' => 'Warranties',
 						'slug' => 'warranty',
 					],
-					'unit'        => [
+					'unit'     => [
 						'name' => 'Units',
 						'slug' => 'unit',
 					],

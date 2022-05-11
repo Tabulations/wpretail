@@ -26,7 +26,7 @@
 					<?php
 						if ( ! empty( $product_options ) ) {
 							foreach ( $product_options as $id => $option ) {
-								echo '<div class="tab-pane ' . ( 'list_product' === $id ? 'active' : '' ) . '" id="' . esc_attr( $id ) . '" role="tabpanel">';
+								echo '<div class="tab-pane ' . ( 'product' === $id ? 'active' : '' ) . '" id="' . esc_attr( $id ) . '" role="tabpanel">';
 									do_action( 'wpretail_view_' . $id );
 								echo '</div>';
 							}
