@@ -12,41 +12,6 @@ final class WPRetail {
 	/**
 	 * Plugin  DIR.
 	 *
-	 * @var $plugin_dir
-	 */
-	private $plugin_dir;
-
-	/**
-	 * Plugin  DIR.
-	 *
-	 * @var $base_name
-	 */
-	private $base_name;
-
-	/**
-	 * Plugin  DIR.
-	 *
-	 * @var $version
-	 */
-	private $version;
-
-	/**
-	 * Plugin  DIR.
-	 *
-	 * @var $log_dir
-	 */
-	private $log_dir;
-
-	/**
-	 * Plugin  DIR.
-	 *
-	 * @var $session_cache_group
-	 */
-	private $session_cache_group;
-
-	/**
-	 * Plugin  DIR.
-	 *
 	 * @var $products
 	 */
 	public $products;
@@ -120,60 +85,23 @@ final class WPRetail {
 		$this->session_cache_group = 'wpretail_session_id';
 		$this->template_debug_mode = false;
 
+		// REgister Activation Hook.
+		register_activation_hook( WPRETAIL_PLUGIN_FILE, [ 'WPRetail\WPRetail_Install', 'install' ] );
+
 		// Plugin Loaded.
-		add_action( 'plugins_loaded', [ $this, 'objects' ], 1 );
+		add_action( 'plugins_loaded', [ $this, 'load_modules' ], 1 );
 		// WPRetail Loaded.
 		do_action( 'wpretail_loaded' );
-		// Initilize.
-		$this->init();
-		$this->init_hooks();
-	}
-
-	/**
-	 * Features
-	 */
-	public function features() {
-		return [
-			'Products\\WPRetail_Products',
-			'Settings\\WPRetail_Settings',
-			'Admin\\Admin_Menus',
-			'Ajax\\WPRetail_Ajax',
-			'Modules\\WPRetail_Modules'
-		];
-	}
-
-	/**
-	 * Init Hooks
-	 *
-	 * @since      1.0.0
-	 */
-	private function init_hooks() {
-		// Hooks.
-		register_activation_hook( WPRETAIL_PLUGIN_FILE, array( 'WPRetail\WPRetail_Install', 'install' ) );
 	}
 
 	/**
 	 * Setup objects.
 	 *
-	 * @since      1.0.0
+	 * @since 1.0.0
 	 */
-	public function objects() {
-		// Global objects.
-		$this->products = new \WPRetail\WPRetail_Product_Handler();
-		$this->sales    = new \WPRetail\WPRetail_Sales_Handler();
-		$this->helper   = new \WPRetail\WPRetail_Helper_Functions();
-		$this->builder  = new \WPRetail\WPRetail_Html_Builder();
-	}
-
-	/**
-	 * Include required core files used in admin and on the frontend.
-	 */
-	public function init() {
-
-		foreach ( $this->features() as $feature ) {
-			$feature = 'WPRetail\\' . $feature;
-			new $feature();
-		}
+	public function load_modules() {
+		// Load Modules.
+		new \WPRetail\Modules\Modules();
 	}
 
 	/**
@@ -211,26 +139,5 @@ final class WPRetail {
 		}
 
 		return (array) $plugin_meta;
-	}
-
-	/**
-	 * Check if the plugin assets are built and minified.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return bool
-	 */
-	private function check_build_dependencies() {
-		// Check if we have compiled CSS.
-		if ( ! file_exists( plugin_dir_path( WPRETAIL_PLUGIN_FILE ) . 'css/admin-starter.css' ) ) {
-			return false;
-		}
-
-		// Check if we have minified JS.
-		if ( ! file_exists( plugin_dir_path( WPRETAIL_PLUGIN_FILE ) . 'js/admin-starter.min.js' ) ) {
-			return false;
-		}
-
-		return true;
 	}
 }
