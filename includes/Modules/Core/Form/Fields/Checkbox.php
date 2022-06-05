@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Sales Handler class.
  */
-class Text extends Field {
+class Checkbox extends Field {
 
 	/**
 	 * Constructor.
@@ -28,7 +28,7 @@ class Text extends Field {
 	 * @param array $form Form.
 	 */
 	public function __construct( $field, $form ) {
-		$this->type = 'text';
+		$this->type = 'checkbox';
 
 		parent::__construct( $field, $form );
 	}
@@ -50,13 +50,6 @@ class Text extends Field {
 	 * @return void
 	 */
 	public function display() {
-		$args = [
-			'id'    => $this->field['name'],
-			'name'  => $this->field['name'],
-			'value' => $this->field['value'],
-			'icon'  => ! empty( $this->field['display_icon'] ),
-		];
-
-		self::input( $args );
+		self::input( $this->field );
 	}
 }

@@ -67,8 +67,9 @@ class Form {
 		$fields = apply_filters(
 			'wpretail_load_fields',
 			[
-				'text'   => 'WPRetail\\Modules\\Core\\Form\\Fields\\Text',
-				'select' => 'WPRetail\\Modules\\Core\\Form\\Fields\\Select',
+				'text'     => 'WPRetail\\Modules\\Core\\Form\\Fields\\Text',
+				'select'   => 'WPRetail\\Modules\\Core\\Form\\Fields\\Select',
+				'checkbox' => 'WPRetail\\Modules\\Core\\Form\\Fields\\Checkbox',
 			]
 		);
 		if ( class_exists( $fields[ $field['type'] ] ) ) {

@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Sales Handler class.
  */
-abstract class Field implements InterfacesField{
+abstract class Field implements InterfacesField {
 
 	/**
 	 * Type
@@ -51,11 +51,8 @@ abstract class Field implements InterfacesField{
 		$field       = wp_parse_args(
 			$field,
 			[
-				'form'       => [],
-				'value'      => '',
-				'name'       => '',
-				'required'   => false,
-				'visibility' => '',
+				'value' => '',
+				'name'  => '',
 			]
 		);
 		$this->field = $field;
@@ -282,21 +279,21 @@ abstract class Field implements InterfacesField{
 		}
 
 		if ( empty( $input['id'] ) ) {
-			$input['id'] = '';
+			$input['id'] = $input['name'];
 		}
 
 		if ( empty( $input['value'] ) ) {
 			$input['value'] = '';
 		}
 
-		if ( ! empty( $args['icon'] ) ) {
+		if ( ! empty( $input['icon'] ) ) {
 			self::html( 'div', [ 'class' => [ 'input-group' ] ] );
-			if ( empty( $args['icon_after_input'] ) ) {
+			if ( empty( $input['icon_after_input'] ) ) {
 				self::html( 'span', [ 'class' => [ 'input-group-text' ] ] );
 				self::html(
 					'i',
 					[
-						'class'  => [ $args['icon'] ],
+						'class'  => [ $input['icon'] ],
 						'closed' => true,
 					]
 				);
@@ -366,63 +363,43 @@ abstract class Field implements InterfacesField{
 				break;
 			case 'radio':
 			case 'checkbox':
-				if ( ! empty( $input['options']['items'] ) ) {
-					$div_args   = ! empty( $input['options']['div'] ) ? $input['options']['div'] : [];
-					$input_args = ! empty( $input['options']['input'] ) ? $input['options']['input'] : [];
-					$label_args = ! empty( $input['options']['label'] ) ? $input['options']['label'] : [];
-
-					if ( empty( $div_args['class'] ) ) {
-						$div_args['class'] = [ 'form-check' ];
-					} else {
-						$div_args['class'] [] = 'form-check';
-					}
-
-					if ( empty( $input_args['class'] ) ) {
-						$input_args['class'] = [ 'form-check-input' ];
-					} else {
-						$input_args['class'] [] = 'form-check-input';
-					}
-					$input_args['attr']['type']  = $input['type'];
-					$input_args['attr']['name']  = $input['name'];
-					$input_args['attr']['value'] = $input['value'];
-
-					if ( empty( $label_args['class'] ) ) {
-						$label_args['class'] = [ 'form-check-label' ];
-					} else {
-						$label_args['class'] [] = 'form-check-label';
-					}
-
-					$input_args['closed'] = true;
-					$label_args['closed'] = true;
-
-					if ( ! empty( $input['options'] ) ) {
-						foreach ( $input['options']['items'] as $key => $option ) {
-							if ( ! empty( $input['id'] ) ) {
-								$input_args['attr']['id']  = $input['id'] . '_' . $key;
-								$label_args['attr']['for'] = $input['id'] . '_' . $key;
-							} else {
-								$input_args['attr']['id']  = $input['name'] . '_' . $key;
-								$label_args['attr']['for'] = $input['name'] . '_' . $key;
-							}
-							if ( ! empty( $input['has_key'] ) ) {
-								$input_args['attr']['value'] = $key;
-								if ( ! empty( $input['value'] ) && $key === $input['value'] ) {
-									$input_args['attr']['checked'] = 'checked';
-								}
-								$label_args['content'] = $option;
-							} else {
-								$input_args['attr']['value'] = $option;
-								if ( ! empty( $input['value'] ) && $option === $input['value'] ) {
-									$input_args['attr']['checked'] = 'checked';
-								}
-								$label_args['content'] = $option;
-							}
-							self::html( 'div', $div_args );
-							self::html( 'input', $input_args );
-							self::html( 'label', $label_args );
-							self::html( 'div' );
-							unset( $input_args['attr']['checked'] );
+				if ( ! empty( $input['options'] ) ) {
+					foreach ( $input['options'] as $key => $option ) {
+						$input_args = [
+							'attr'  => [
+								'type' => 'checkbox',
+							],
+							'class' => [ 'form-check' ],
+						];
+						$div_args   = [
+							'class' => array_merge( ! empty( $input['class'] ) ? array_pop( $input['class'] ) : [], [ 'form-check-group' ] ),
+						];
+						$label_args = [];
+						if ( ! empty( $input['id'] ) ) {
+							$input_args['attr']['id']  = $input['id'] . '_' . $key;
+							$label_args['attr']['for'] = $input['id'] . '_' . $key;
+						} else {
+							$input_args['attr']['id']  = $input['name'] . '_' . $key;
+							$label_args['attr']['for'] = $input['name'] . '_' . $key;
 						}
+						if ( ! empty( $input['has_key'] ) ) {
+							$input_args['attr']['value'] = $key;
+							if ( ! empty( $input['value'] ) && $key === $input['value'] ) {
+								$input_args['attr']['checked'] = 'checked';
+							}
+							$label_args['content'] = $option;
+						} else {
+							$input_args['attr']['value'] = $option;
+							if ( ! empty( $input['value'] ) && $option === $input['value'] ) {
+								$input_args['attr']['checked'] = 'checked';
+							}
+							$label_args['content'] = $option;
+						}
+						self::html( 'div', $div_args );
+						self::html( 'input', $input_args );
+						self::html( 'label', $label_args );
+						self::html( 'div' );
+						unset( $input_args['attr']['checked'] );
 					}
 				}
 				break;

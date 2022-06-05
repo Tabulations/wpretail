@@ -73,6 +73,61 @@ class Products {
 					],
 					'has_key' => true,
 				],
+				[
+					'label'   => __( 'Unit', 'wpretail' ) . '*',
+					'type'    => 'select',
+					'name'    => 'unit',
+					'options' => [
+						'c128' => __( 'KG', 'wpretail' ),
+						'c39'  => __( 'Meter', 'wpretail' ),
+					],
+					'has_key' => true,
+				],
+				[
+					'label'   => __( 'Brand', 'wpretail' ) . '*',
+					'type'    => 'select',
+					'name'    => 'brand',
+					'options' => [
+						'c128' => __( 'Samsung', 'wpretail' ),
+						'c39'  => __( 'CG', 'wpretail' ),
+					],
+					'has_key' => true,
+				],
+				[
+					'label'   => __( 'Category', 'wpretail' ) . '*',
+					'type'    => 'select',
+					'name'    => 'category',
+					'options' => [
+						'c128' => __( 'Mobile', 'wpretail' ),
+						'c39'  => __( 'TV', 'wpretail' ),
+					],
+					'has_key' => true,
+				],
+				[
+					'label'   => __( 'Sub Category', 'wpretail' ) . '*',
+					'type'    => 'select',
+					'name'    => 'sub_category',
+					'options' => [
+						'c128' => __( 'Core', 'wpretail' ),
+						'c39'  => __( 'Galaxy', 'wpretail' ),
+					],
+					'has_key' => true,
+				],
+				[
+					'label'   => __( 'Business Location', 'wpretail' ) . '*',
+					'type'    => 'select',
+					'name'    => 'sub_category',
+					'options' => [
+						'c128' => __( 'Pokhara', 'wpretail' ),
+						'c39'  => __( 'Kathmandu', 'wpretail' ),
+					],
+					'has_key' => true,
+				],
+				[
+					'label'   => __( 'Alert Quantity', 'wpretail' ) . '*',
+					'type'    => 'text',
+					'name'    => 'alert_quantity',
+				],
 			],
 		];
 		return $forms;

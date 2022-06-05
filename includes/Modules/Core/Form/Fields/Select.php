@@ -50,15 +50,6 @@ class Select extends Field {
 	 * @return void
 	 */
 	public function display() {
-		$args = [
-			'has_key' => ! empty( $this->field['has_key'] ) ? $this->field['has_key'] : false,
-			'type'    => $this->type,
-			'id'      => $this->field['name'],
-			'name'    => $this->field['name'],
-			'value'   => $this->field['value'],
-			'icon'    => ! empty( $this->field['display_icon'] ),
-			'options' => $this->field['options'],
-		];
-		self::input( $args );
+		self::input( $this->field );
 	}
 }
