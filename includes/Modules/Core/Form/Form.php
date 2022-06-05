@@ -51,6 +51,7 @@ class Form {
 				'preview_form'        => false,
 				'multi_step_form'     => false,
 				'label_position'      => 'left',
+				'cols'                => 1,
 			]
 		);
 	}
@@ -109,14 +110,23 @@ class Form {
 
 		echo '>';
 
+		if ( $this->args['cols'] > 1 ) {
+			$cols = ceil( 12 / $this->args['cols'] );
+			echo '<div class="row">';
+		}
+
 		if ( empty( $this->args['multi_step_form'] ) ) {
 			foreach ( $form['fields'] as $field ) {
+				echo isset( $cols ) ? '<div class="col-md-' . esc_attr( $cols ) . '">' : '';
 				$field = self::field( $field, $form );
 				$field->display_before();
 				$field->display();
 				$field->display_after();
+				echo isset( $cols ) ? '</div>' : '';
 			}
 		}
+
+		echo isset( $cols ) ? '</div>' : '';
 
 		echo '<div class="mb-3">';
 		echo '<input type="submit" name="submit" value="submit"/>';
